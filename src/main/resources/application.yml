@@ -1,0 +1,29 @@
+
+# mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${{ secrets.DB_URL }}
+    username: ${{ secrets.DB_USERNAME }}
+    password: ${{ secrets.DB_PASSWORD }}
+
+# mybatis
+mybatis:
+  configuration:
+    multiple-result-sets-enabled: false
+    map-underscore-to-camel-case: true # model 프로퍼티 camel case 설정
+    call-setters-on-nulls: true
+    jdbc-type-for-null: varchar
+    default-fetch-size: 500
+  mapper-locations:
+    - classpath:static/mapper/*.xml
+  type-aliases-package: cobook.buddywisdom.mybatis # xml파일 result type에 패키지명을 생략할 수 있도록 alias 설정
+
+# springdoc
+springdoc:
+  swagger-ui:
+    # swagger-ui custom path
+    path: /swagger-ui.html  # swagger-ui custom path
+  api-docs:
+    path: /api-docs  # JSON format endpoint custom path
+  show-actuator: true
