@@ -22,8 +22,10 @@ mybatis:
 # springdoc
 springdoc:
   swagger-ui:
-    # swagger-ui custom path
     path: /swagger-ui.html  # swagger-ui custom path
   api-docs:
     path: /api-docs  # JSON format endpoint custom path
-  show-actuator: true
+
+# 로깅 레벨 설정
+logging.level:
+  cobook.buddywisdom.mapper: DEBUG
