@@ -1,5 +1,8 @@
-<h1 align="middle">버즈덤</h1>
-<p align="middle">️코칭 일정 관리 서비스 🗓</p>
+<div align="center">
+
+### 코칭 일정 관리를 책임지는, 버즈덤 🕊
+
+</div>
 
 ---
 
