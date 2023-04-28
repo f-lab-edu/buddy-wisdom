@@ -15,9 +15,8 @@ mybatis:
     call-setters-on-nulls: true
     jdbc-type-for-null: varchar
     default-fetch-size: 500
-  mapper-locations:
-    - classpath:static/mapper/*.xml
-  type-aliases-package: cobook.buddywisdom.mybatis # xml파일 result type에 패키지명을 생략할 수 있도록 alias 설정
+  mapper-locations: mapper/**/*.xml
+  type-aliases-package: cobook.buddywisdom.**.domain # xml파일 result type에 패키지명을 생략할 수 있도록 alias 설정
 
 # springdoc
 springdoc:
