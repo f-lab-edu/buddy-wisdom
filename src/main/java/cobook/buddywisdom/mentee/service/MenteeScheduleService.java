@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
@@ -14,6 +15,7 @@ import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper;
 
 @Service
+@Transactional(readOnly = true)
 public class MenteeScheduleService {
 
 	private final MenteeScheduleMapper menteeScheduleMapper;
