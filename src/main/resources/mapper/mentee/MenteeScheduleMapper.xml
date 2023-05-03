@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper">
+
+    <select id="findByMenteeIdAndPossibleDateTime" parameterType="map" resultType="MenteeMonthlySchedule">
+        SELECT ms.id,
+               ms.coaching_schedule_id,
+               ms.cancel_yn,
+               cs.possible_date_time
+        FROM mentee_schedule ms
+        JOIN coaching_schedule cs
+            ON ms.coaching_schedule_id = cs.id
+        WHERE mentee_id = #{menteeId}
+            AND cs.possible_date_time LIKE #{date} '%';
+    </select>
+
+    <select id="findByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeScheduleFeedback">
+        SELECT ms.id,
+               cs.possible_date_time,
+               fb.id AS feedback_id,
+               fb.coach_feedback,
+               fb.mentee_feedback
+        FROM mentee_schedule ms
+        JOIN coaching_schedule cs
+            ON ms.coaching_schedule_id = cs.id
+        LEFT JOIN feedback fb
+            ON ms.id = fb.mentee_schedule_id
+        WHERE ms.mentee_id = #{menteeId}
+            AND ms.coaching_schedule_id = #{coachingScheduleId};
+    </select>
+
+</mapper>
