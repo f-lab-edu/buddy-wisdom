@@ -11,6 +11,7 @@ import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 import cobook.buddywisdom.mentee.dto.MenteeMonthlyScheduleResponse;
 import cobook.buddywisdom.mentee.dto.MenteeScheduleFeedbackResponse;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper;
 
@@ -24,8 +25,9 @@ public class MenteeScheduleService {
 		this.menteeScheduleMapper = menteeScheduleMapper;
 	}
 
-	public List<MenteeMonthlyScheduleResponse> getMenteeMonthlySchedule(Long menteeId, String date) {
-		MenteeMonthlySchedule menteeMonthlySchedule = menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(menteeId, date);
+	public List<MenteeMonthlyScheduleResponse> getMenteeMonthlySchedule(Long menteeId, MenteeMonthlyScheduleRequest request) {
+		MenteeMonthlySchedule menteeMonthlySchedule =
+			menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(menteeId, request.startDateTime(), request.endDateTime());
 
 		return Optional.ofNullable(menteeMonthlySchedule)
 			.map(MenteeMonthlyScheduleResponse::from)

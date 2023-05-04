@@ -14,7 +14,7 @@
         JOIN coaching_schedule cs
             ON ms.coaching_schedule_id = cs.id
         WHERE mentee_id = #{menteeId}
-            AND cs.possible_date_time LIKE #{date} '%';
+            AND cs.possible_date_time BETWEEN #{startDateTime} AND #{endDateTime};
     </select>
 
     <select id="findByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeScheduleFeedback">

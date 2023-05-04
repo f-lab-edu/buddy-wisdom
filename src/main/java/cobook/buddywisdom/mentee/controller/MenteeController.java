@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cobook.buddywisdom.global.annotation.YearMonth;
 import cobook.buddywisdom.mentee.dto.MenteeMonthlyScheduleResponse;
 import cobook.buddywisdom.mentee.dto.MenteeScheduleFeedbackResponse;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
+import jakarta.validation.Valid;
 
-@Validated
 @RestController
 @RequestMapping("/api/v1/mentees")
 public class MenteeController {
@@ -27,10 +27,10 @@ public class MenteeController {
 	}
 
 	// TODO : menteeId는 인증된 객체의 정보 활용 -> 테스트 코드도 변경
-	@GetMapping(value = "/schedule/{menteeId}/{date}")
+	@GetMapping(value = "/schedule/{menteeId}")
 	public ResponseEntity<Optional<List<MenteeMonthlyScheduleResponse>>> getMenteeMonthlySchedule(@PathVariable Long menteeId,
-																								@PathVariable @YearMonth String date) {
-		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMenteeMonthlySchedule(menteeId, date)));
+																								@RequestBody @Valid MenteeMonthlyScheduleRequest request) {
+		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMenteeMonthlySchedule(menteeId, request)));
 	}
 
 	@GetMapping(value = "/schedule/feedback/{menteeId}/{scheduleId}")

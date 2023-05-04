@@ -1,12 +1,15 @@
 package cobook.buddywisdom.global.exception;
 
-import org.springframework.http.HttpStatus;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,10 +22,14 @@ public class ApiExceptionHandler {
 		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE);
 	}
 
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {
-		log.error("ConstraintViolationException : ", exception);
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), exception.getMessage()));
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
+		log.error("MethodArgumentNotValidException : ", exception);
+
+		Map<String, String> errors = new HashMap<>();
+		exception.getBindingResult().getAllErrors()
+			.forEach(e -> errors.put(((FieldError)e).getField(), e.getDefaultMessage()));
+
+		return ResponseEntity.badRequest().body(errors);
 	}
 }
