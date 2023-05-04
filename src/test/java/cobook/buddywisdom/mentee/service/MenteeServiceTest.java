@@ -1,6 +1,7 @@
 package cobook.buddywisdom.mentee.service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 import cobook.buddywisdom.mentee.dto.MenteeMonthlyScheduleResponse;
 import cobook.buddywisdom.mentee.dto.MenteeScheduleFeedbackResponse;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper;
 
@@ -39,15 +41,14 @@ public class MenteeServiceTest {
 		@DisplayName("해당하는 스케줄 정보가 존재하면 월별 스케줄 정보를 반환한다.")
 		void when_scheduleExistsWithInformation_expect_returnResponseList() {
 			Long menteeId = 1L;
-			String date = String.valueOf(LocalDateTime.now()).substring(0, 7);
 
 			MenteeMonthlySchedule menteeMonthlySchedule = MenteeMonthlySchedule.of( 1L, false, LocalDateTime.now());
 
-			BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.anyString()))
+			BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
 				.willReturn(menteeMonthlySchedule);
 
 			List<MenteeMonthlyScheduleResponse> expectedResponse =
-				menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
+				menteeScheduleService.getMenteeMonthlySchedule(menteeId, getMenteeMonthlyScheduleRequest());
 
 			Assertions.assertNotNull(expectedResponse);
 			Assertions.assertEquals(1, expectedResponse.size());
@@ -57,20 +58,18 @@ public class MenteeServiceTest {
 		@DisplayName("해당하는 스케줄 정보가 존재하지 않으면 빈 배열을 반환한다.")
 		void when_scheduleDoesNotExistsWithInformation_expect_returnEmptyArray() {
 			Long menteeId = 1L;
-			String date = String.valueOf(LocalDateTime.now()).substring(0, 7);
 
 			BDDMockito
-				.given(menteeScheduleService.getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.anyString()))
+				.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
 				.willReturn(null);
 
 			List<MenteeMonthlyScheduleResponse> expectedResponse =
-				menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
+				menteeScheduleService.getMenteeMonthlySchedule(menteeId, getMenteeMonthlyScheduleRequest());
 
 			Assertions.assertTrue(expectedResponse.isEmpty());
 		}
 
 	}
-
 
 	@Nested
 	@DisplayName("스케줄 피드백 조회")
@@ -107,5 +106,13 @@ public class MenteeServiceTest {
 					menteeScheduleService.getMenteeScheduleFeedback(menteeId, scheduleId))
 			.isInstanceOf(NotFoundMenteeScheduleException.class);
 		}
+	}
+
+	public static MenteeMonthlyScheduleRequest getMenteeMonthlyScheduleRequest() {
+		LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+		LocalDateTime startDateTime = LocalDateTime.parse(firstDayOfMonth + "T00:00:00");
+		LocalDateTime endDateTime = LocalDateTime.parse(LocalDate.now().withDayOfMonth(firstDayOfMonth.lengthOfMonth()) + "T23:59:59");
+
+		return new MenteeMonthlyScheduleRequest(startDateTime, endDateTime);
 	}
 }
