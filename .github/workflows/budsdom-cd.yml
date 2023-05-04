@@ -1,9 +1,7 @@
-name: CI and CD
+name: CD
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -38,6 +36,17 @@ jobs:
           target: /budsdom
           overwrite: true
 
+      - name: Deploy script to remote server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          source: ./run.sh
+          target: ./
+          overwrite: true
+
       - name: Run jar file use SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -45,4 +54,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          script: ./deploy
+          script: chmod 755 run.sh && ./run.sh
