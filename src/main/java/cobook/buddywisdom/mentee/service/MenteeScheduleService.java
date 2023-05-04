@@ -24,12 +24,12 @@ public class MenteeScheduleService {
 		this.menteeScheduleMapper = menteeScheduleMapper;
 	}
 
-	public Optional<List<MenteeMonthlyScheduleResponse>> getMenteeMonthlySchedule(Long menteeId, String date) {
+	public List<MenteeMonthlyScheduleResponse> getMenteeMonthlySchedule(Long menteeId, String date) {
 		MenteeMonthlySchedule menteeMonthlySchedule = menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(menteeId, date);
 
-		return Optional.of(Optional.ofNullable(menteeMonthlySchedule)
+		return Optional.ofNullable(menteeMonthlySchedule)
 			.map(MenteeMonthlyScheduleResponse::from)
-			.stream().toList());
+			.stream().toList();
 	}
 
 	public MenteeScheduleFeedbackResponse getMenteeScheduleFeedback(Long menteeId, Long coachingScheduleId) {

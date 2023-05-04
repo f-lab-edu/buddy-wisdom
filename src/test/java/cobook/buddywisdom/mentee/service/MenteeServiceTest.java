@@ -43,11 +43,11 @@ public class MenteeServiceTest {
 		BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.anyString()))
 			.willReturn(menteeMonthlySchedule);
 
-		Optional<List<MenteeMonthlyScheduleResponse>> expectedResponse =
+		List<MenteeMonthlyScheduleResponse> expectedResponse =
 			menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
 
 		Assertions.assertNotNull(expectedResponse);
-		Assertions.assertEquals(1, expectedResponse.get().size());
+		Assertions.assertEquals(1, expectedResponse.size());
 	}
 
 	@Nested

@@ -30,7 +30,7 @@ public class MenteeController {
 	@GetMapping(value = "/schedule/{menteeId}/{date}")
 	public ResponseEntity<Optional<List<MenteeMonthlyScheduleResponse>>> getMenteeMonthlySchedule(@PathVariable Long menteeId,
 																								@PathVariable @YearMonth String date) {
-		return ResponseEntity.ok(menteeScheduleService.getMenteeMonthlySchedule(menteeId, date));
+		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMenteeMonthlySchedule(menteeId, date)));
 	}
 
 	@GetMapping(value = "/schedule/feedback/{menteeId}/{scheduleId}")

@@ -49,7 +49,7 @@ public class MenteeControllerTest {
 
 			BDDMockito
 				.given(menteeScheduleService.getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.anyString()))
-				.willReturn(Optional.of(List.of(expectedResponse)));
+				.willReturn(List.of(expectedResponse));
 
 
 			ResultActions response =
@@ -77,7 +77,7 @@ public class MenteeControllerTest {
 
 			response
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().string(""));
+				.andExpect(MockMvcResultMatchers.content().string("null"));
 		}
 
 		@ParameterizedTest
