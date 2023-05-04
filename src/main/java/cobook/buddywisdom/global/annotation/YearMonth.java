@@ -1,4 +1,4 @@
-package cobook.buddywisdom.mentee.annotation;
+package cobook.buddywisdom.global.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

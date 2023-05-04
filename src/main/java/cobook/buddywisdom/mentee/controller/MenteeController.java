@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cobook.buddywisdom.mentee.annotation.YearMonth;
+import cobook.buddywisdom.global.annotation.YearMonth;
 import cobook.buddywisdom.mentee.dto.MenteeMonthlyScheduleResponse;
 import cobook.buddywisdom.mentee.dto.MenteeScheduleFeedbackResponse;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;

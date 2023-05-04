@@ -1,4 +1,4 @@
-package cobook.buddywisdom.mentee.annotation;
+package cobook.buddywisdom.global.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
