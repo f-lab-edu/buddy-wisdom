@@ -32,29 +32,51 @@ public class MenteeServiceTest {
 	@InjectMocks
 	MenteeScheduleService menteeScheduleService;
 
-	@Test
-	@DisplayName("유효한 값이 전달되면 조회된 월별 스케줄 정보를 반환한다.")
-	void when_scheduleExistsWithInformation_expect_returnResponseList() {
-		Long menteeId = 1L;
-		String date = "2023-04";
+	@Nested
+	@DisplayName("월별 스케줄 조회")
+	class MonthlyScheduleTest {
+		@Test
+		@DisplayName("해당하는 스케줄 정보가 존재하면 월별 스케줄 정보를 반환한다.")
+		void when_scheduleExistsWithInformation_expect_returnResponseList() {
+			Long menteeId = 1L;
+			String date = String.valueOf(LocalDateTime.now()).substring(0, 7);
 
-		MenteeMonthlySchedule menteeMonthlySchedule = MenteeMonthlySchedule.of( 1L, false, LocalDateTime.now());
+			MenteeMonthlySchedule menteeMonthlySchedule = MenteeMonthlySchedule.of( 1L, false, LocalDateTime.now());
 
-		BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.anyString()))
-			.willReturn(menteeMonthlySchedule);
+			BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.anyString()))
+				.willReturn(menteeMonthlySchedule);
 
-		List<MenteeMonthlyScheduleResponse> expectedResponse =
-			menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
+			List<MenteeMonthlyScheduleResponse> expectedResponse =
+				menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
 
-		Assertions.assertNotNull(expectedResponse);
-		Assertions.assertEquals(1, expectedResponse.size());
+			Assertions.assertNotNull(expectedResponse);
+			Assertions.assertEquals(1, expectedResponse.size());
+		}
+
+		@Test
+		@DisplayName("해당하는 스케줄 정보가 존재하지 않으면 빈 배열을 반환한다.")
+		void when_scheduleDoesNotExistsWithInformation_expect_returnEmptyArray() {
+			Long menteeId = 1L;
+			String date = String.valueOf(LocalDateTime.now()).substring(0, 7);
+
+			BDDMockito
+				.given(menteeScheduleService.getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.anyString()))
+				.willReturn(null);
+
+			List<MenteeMonthlyScheduleResponse> expectedResponse =
+				menteeScheduleService.getMenteeMonthlySchedule(menteeId, date);
+
+			Assertions.assertTrue(expectedResponse.isEmpty());
+		}
+
 	}
+
 
 	@Nested
 	@DisplayName("스케줄 피드백 조회")
 	class ScheduleFeedbackTest {
 		@Test
-		@DisplayName("등록된 스케줄 정보가 존재하면 스케줄 피드백 정보를 반환한다.")
+		@DisplayName("해당하는 스케줄 정보가 존재하면 스케줄 피드백 정보를 반환한다.")
 		void when_scheduleExistsWithInformation_expect_returnResponse() {
 			Long menteeId = 1L;
 			Long scheduleId = 1L;
@@ -73,7 +95,7 @@ public class MenteeServiceTest {
 		}
 
 		@Test
-		@DisplayName("등록된 스케줄 정보가 존재하지 않으면 NotFoundMenteeScheduleException이 발생한다.")
+		@DisplayName("해당하는 스케줄 정보가 존재하지 않으면 NotFoundMenteeScheduleException이 발생한다.")
 		void when_scheduleDoesNotExists_expect_throwsNotFoundMenteeScheduleException() {
 			Long menteeId = 1L;
 			Long scheduleId = 1L;
