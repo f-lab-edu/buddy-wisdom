@@ -38,6 +38,7 @@ public class AuthService {
                 = new UsernamePasswordAuthenticationToken(customUserDetails, password);
 
         Authentication authenticate = authenticationManager.authenticate(token);
+        // 스레드가 실행되는 동안 인증 상태를 유지하도록 저장
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         return tokenProvider.createToken(authenticate);

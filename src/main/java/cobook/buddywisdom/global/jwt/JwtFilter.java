@@ -1,6 +1,5 @@
 package cobook.buddywisdom.global.jwt;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -46,8 +45,6 @@ public class JwtFilter extends GenericFilterBean {
     // request header 에서 token 정보를 꺼내온다
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
-        log.info("bearerToken = {}", bearerToken);
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             // Bearer Token 에서 "Token"을 잘라낸다

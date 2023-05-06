@@ -23,4 +23,21 @@
         WHERE m.email = #{email} AND m.active_yn = 1
     </select>
 
+
+    <select id="findByMemberId" parameterType="int" resultType="Member">
+        SELECT
+            m.id
+             , m.name
+             , m.nickname
+             , m.email
+             , m.password
+             , m.phone_number
+             , m.role
+             , m.active_yn
+             , m.created_at
+             , m.updated_at
+        FROM member m
+        WHERE m.id = #{memberId} AND m.active_yn = 1
+    </select>
+
 </mapper>

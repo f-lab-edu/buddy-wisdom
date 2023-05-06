@@ -1,4 +1,4 @@
-package cobook.buddywisdom.auth.api;
+package cobook.buddywisdom.auth.controller;
 
 import cobook.buddywisdom.auth.dto.LoginRequestDto;
 import cobook.buddywisdom.global.jwt.TokenDto;
