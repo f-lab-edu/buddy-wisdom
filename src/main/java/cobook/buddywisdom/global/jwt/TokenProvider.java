@@ -1,11 +1,11 @@
 package cobook.buddywisdom.global.jwt;
 
-import cobook.buddywisdom.global.domain.vo.AuthResponse;
+import cobook.buddywisdom.global.security.domain.vo.AuthMember;
 import cobook.buddywisdom.global.exception.ErrorMessage;
-import cobook.buddywisdom.global.domain.vo.RoleType;
+import cobook.buddywisdom.global.security.domain.vo.RoleType;
 import cobook.buddywisdom.global.security.CustomUserDetails;
-import cobook.buddywisdom.member.repository.MemberMapper;
-import cobook.buddywisdom.mentee.exception.NotFoundMemberException;
+import cobook.buddywisdom.auth.mapper.MemberMapper;
+import cobook.buddywisdom.global.exception.NotFoundMemberException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -48,7 +48,7 @@ public class TokenProvider implements InitializingBean {
 
     public TokenDto createToken(Authentication authentication) {
 
-        log.info("createToken = {}", authentication.getName());
+        log.debug("createToken = {}", authentication.getName());
 
         // 권한 목록 조회
         // 여러 권한을 가질 경우 콤마(,)로 구분
@@ -99,13 +99,13 @@ public class TokenProvider implements InitializingBean {
             return true;
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT signature.");
+            log.debug("Invalid JWT signature.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired token.");
+            log.debug("Expired token.");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported token.");
+            log.debug("Unsupported token.");
         } catch (IllegalArgumentException e) {
-            log.info("Invalid token.");
+            log.debug("Invalid token.");
         }
         return false;
     }
@@ -127,10 +127,10 @@ public class TokenProvider implements InitializingBean {
 
         String id = String.valueOf(claims.get("id"));
 
-        log.info("claims id = {}", id);
-        log.info("claims username = {}", claims.getSubject());
+        log.debug("claims id = {}", id);
+        log.debug("claims username = {}", claims.getSubject());
 
-        AuthResponse user = memberMapper.findByEmail(claims.getSubject())
+        AuthMember user = memberMapper.findByEmail(claims.getSubject())
                 .orElseThrow(() -> new NotFoundMemberException(ErrorMessage.NOT_FOUND_MEMBER));
 
         CustomUserDetails principal = CustomUserDetails.builder()

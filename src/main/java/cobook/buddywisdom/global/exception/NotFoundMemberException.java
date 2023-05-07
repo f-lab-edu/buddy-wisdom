@@ -1,6 +1,4 @@
-package cobook.buddywisdom.mentee.exception;
-
-import cobook.buddywisdom.global.exception.ErrorMessage;
+package cobook.buddywisdom.global.exception;
 
 public class NotFoundMemberException extends RuntimeException {
 

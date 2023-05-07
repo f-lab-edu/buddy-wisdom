@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cobook.buddywisdom.auth.mapper.MemberMapper">
+
+    <select id="findByEmailAndPassword" parameterType="String" resultType="AuthMember">
+        SELECT
+            m.id
+             , m.email
+             , m.password
+             , m.role
+        FROM member m
+        WHERE m.email = #{email}
+          AND m.password = #{password}
+          AND m.active_yn = 1
+    </select>
+
+    <select id="findByEmail" parameterType="String" resultType="AuthMember">
+        SELECT
+            m.id
+             , m.email
+             , m.role
+        FROM member m
+        WHERE m.email = #{email}
+          AND m.active_yn = 1
+    </select>
+
+</mapper>

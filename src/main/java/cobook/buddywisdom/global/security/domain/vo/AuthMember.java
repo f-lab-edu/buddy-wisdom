@@ -1,4 +1,4 @@
-package cobook.buddywisdom.global.domain.vo;
+package cobook.buddywisdom.global.security.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthResponse {
+public class AuthMember {
     private int id;
     private String email;
+    private String password;
     private String role;
 }

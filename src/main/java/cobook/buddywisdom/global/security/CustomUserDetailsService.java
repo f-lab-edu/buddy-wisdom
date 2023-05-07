@@ -1,8 +1,8 @@
 package cobook.buddywisdom.global.security;
 
 import cobook.buddywisdom.global.exception.ErrorMessage;
-import cobook.buddywisdom.member.repository.MemberMapper;
-import cobook.buddywisdom.mentee.exception.NotFoundMemberException;
+import cobook.buddywisdom.auth.mapper.MemberMapper;
+import cobook.buddywisdom.global.exception.NotFoundMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -11,11 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginRequestDto {
-
-    @JsonProperty("email")
     @Email
     private String email;
-
-    @JsonProperty("password")
     private String password;
 }

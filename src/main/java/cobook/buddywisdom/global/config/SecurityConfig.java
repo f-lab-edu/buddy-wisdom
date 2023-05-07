@@ -6,6 +6,7 @@ import cobook.buddywisdom.global.jwt.TokenProvider;
 import cobook.buddywisdom.global.security.CustomAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -28,7 +29,7 @@ public class SecurityConfig {
     private final CustomAuthenticationProvider customAuthenticationProvider;
 
     // public path 는 모두 허용
-    private static final String PUBLIC = "/api/v1/public/**";
+    private static final String PUBLIC_PATH = "/api/v1/public/**";
 
     public SecurityConfig(TokenProvider tokenProvider
             , JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandler jwtAccessDeniedHandler, CustomAuthenticationProvider customAuthenticationProvider) {
@@ -75,9 +76,11 @@ public class SecurityConfig {
                     auth
                         // 모두 허용
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
-                        .requestMatchers(HttpMethod.POST, PUBLIC).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_PATH).permitAll()
                         // 권한에 따른 path 를 지정
-                        .requestMatchers("/api/v1/members").hasAnyRole("ADMIN", "MENTO", "MENTEE")
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/api/v1/coaches/**").hasAnyRole("COACH")
+                        .requestMatchers("/api/v1/mentees/**").hasAnyRole("MENTEE")
                         .anyRequest().authenticated()
                 )
 

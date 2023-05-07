@@ -1,7 +1,7 @@
 package cobook.buddywisdom.global.security;
 
-import cobook.buddywisdom.global.domain.vo.AuthResponse;
-import cobook.buddywisdom.global.domain.vo.RoleType;
+import cobook.buddywisdom.global.security.domain.vo.AuthMember;
+import cobook.buddywisdom.global.security.domain.vo.RoleType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,7 +66,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
         return true;
     }
 
-    public static CustomUserDetails of(AuthResponse member) {
+    public static CustomUserDetails of(AuthMember member) {
         return CustomUserDetails.builder()
                 .id(member.getId())
                 .email(member.getEmail())
