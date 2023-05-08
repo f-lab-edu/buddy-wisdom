@@ -1,6 +1,6 @@
 //package cobook.buddywisdom.auth.service;
 //
-//import cobook.buddywisdom.auth.WithMockCustomUser;
+//import cobook.buddywisdom.util.WithMockCustomUser;
 //import cobook.buddywisdom.auth.mapper.MemberMapper;
 //import cobook.buddywisdom.global.exception.ErrorMessage;
 //import cobook.buddywisdom.global.exception.NotFoundMemberException;

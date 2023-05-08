@@ -1,6 +1,6 @@
 //package cobook.buddywisdom.auth.controller;
 //
-//import cobook.buddywisdom.auth.WithMockCustomUser;
+//import cobook.buddywisdom.util.WithMockCustomUser;
 //import cobook.buddywisdom.auth.dto.LoginRequestDto;
 //import cobook.buddywisdom.auth.mapper.MemberMapper;
 //import cobook.buddywisdom.global.security.domain.vo.AuthMember;
