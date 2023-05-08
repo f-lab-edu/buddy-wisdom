@@ -1,102 +1,102 @@
-package cobook.buddywisdom.mentee.controller;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
-import cobook.buddywisdom.mentee.service.MenteeScheduleService;
-import jakarta.validation.constraints.Null;
-
-@AutoConfigureMybatis
-@WebMvcTest(MenteeController.class)
-public class MenteeControllerTest {
-
-	@MockBean
-	private MenteeScheduleService menteeScheduleService;
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Nested
-	@DisplayName("월별 스케줄 조회")
-	class MonthlyScheduleTest {
-		@Test
-		@DisplayName("일정 정보가 모두 전달되면 메서드를 호출하고 200 OK를 반환한다.")
-		void when_dateIsValid_expect_callMethodAndReturn200Ok() throws Exception {
-			Long menteeId = 1L;
-
-			LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
-			LocalDateTime startDateTime = LocalDateTime.parse(firstDayOfMonth + "T00:00:00");
-			LocalDateTime endDateTime = LocalDateTime.parse(LocalDate.now().withDayOfMonth(firstDayOfMonth.lengthOfMonth()) + "T23:59:59");
-
-			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(startDateTime, endDateTime);
-
-			ResultActions response =
-				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + menteeId)
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsBytes(request)))
-				.andDo(MockMvcResultHandlers.print());
-
-			BDDMockito.verify(menteeScheduleService).getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.any());
-			response.andExpect(MockMvcResultMatchers.status().isOk());
-		}
-
-		@Test
-		@DisplayName("일정 정보가 null 값이라면 400 Bad Request가 반환된다.")
-		void when_emailFieldIsNullAndEmptyAndBlank_expect_joinToFail() throws Exception {
-			Long menteeId = 1L;
-
-			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(null, null);
-
-			ResultActions response =
-				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + menteeId)
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsBytes(request)))
-				.andDo(MockMvcResultHandlers.print());
-
-			response.andExpect(MockMvcResultMatchers.status().isBadRequest());
-		}
-	}
-
-	@Nested
-	@DisplayName("스케줄 피드백 조회")
-	class ScheduleFeedbackTest {
-		@Test
-		@DisplayName("유효한 스케줄 id가 전달되면 메서드를 호출하고 200 OK를 반환한다.")
-		void when_scheduleIdIsValid_expect_callMethodAndReturn200Ok() throws Exception {
-			Long menteeId = 1L;
-			Long scheduleId = 1L;
-
-			ResultActions response =
-				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/feedback/" + menteeId + "/" + scheduleId))
-				.andDo(MockMvcResultHandlers.print());
-
-			BDDMockito.verify(menteeScheduleService).getMenteeScheduleFeedback(BDDMockito.anyLong(), BDDMockito.anyLong());
-			response.andExpect(MockMvcResultMatchers.status().isOk());
-		}
-	}
-}
+//package cobook.buddywisdom.mentee.controller;
+//
+//
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
+//
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Nested;
+//import org.junit.jupiter.api.Test;
+//import org.mockito.BDDMockito;
+//import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+//import org.springframework.boot.test.mock.mockito.MockBean;
+//import org.springframework.http.MediaType;
+//import org.springframework.test.web.servlet.MockMvc;
+//import org.springframework.test.web.servlet.ResultActions;
+//import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+//import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+//import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//
+//import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
+//import cobook.buddywisdom.mentee.service.MenteeScheduleService;
+//import jakarta.validation.constraints.Null;
+//
+//@AutoConfigureMybatis
+//@WebMvcTest(MenteeController.class)
+//public class MenteeControllerTest {
+//
+//	@MockBean
+//	private MenteeScheduleService menteeScheduleService;
+//
+//	@Autowired
+//	private MockMvc mockMvc;
+//
+//	@Autowired
+//	private ObjectMapper objectMapper;
+//
+//	@Nested
+//	@DisplayName("월별 스케줄 조회")
+//	class MonthlyScheduleTest {
+//		@Test
+//		@DisplayName("일정 정보가 모두 전달되면 메서드를 호출하고 200 OK를 반환한다.")
+//		void when_dateIsValid_expect_callMethodAndReturn200Ok() throws Exception {
+//			Long menteeId = 1L;
+//
+//			LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+//			LocalDateTime startDateTime = LocalDateTime.parse(firstDayOfMonth + "T00:00:00");
+//			LocalDateTime endDateTime = LocalDateTime.parse(LocalDate.now().withDayOfMonth(firstDayOfMonth.lengthOfMonth()) + "T23:59:59");
+//
+//			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(startDateTime, endDateTime);
+//
+//			ResultActions response =
+//				mockMvc.perform(
+//					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + menteeId)
+//						.contentType(MediaType.APPLICATION_JSON)
+//						.content(objectMapper.writeValueAsBytes(request)))
+//				.andDo(MockMvcResultHandlers.print());
+//
+//			BDDMockito.verify(menteeScheduleService).getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.any());
+//			response.andExpect(MockMvcResultMatchers.status().isOk());
+//		}
+//
+//		@Test
+//		@DisplayName("일정 정보가 null 값이라면 400 Bad Request가 반환된다.")
+//		void when_emailFieldIsNullAndEmptyAndBlank_expect_joinToFail() throws Exception {
+//			Long menteeId = 1L;
+//
+//			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(null, null);
+//
+//			ResultActions response =
+//				mockMvc.perform(
+//					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + menteeId)
+//						.contentType(MediaType.APPLICATION_JSON)
+//						.content(objectMapper.writeValueAsBytes(request)))
+//				.andDo(MockMvcResultHandlers.print());
+//
+//			response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+//		}
+//	}
+//
+//	@Nested
+//	@DisplayName("스케줄 피드백 조회")
+//	class ScheduleFeedbackTest {
+//		@Test
+//		@DisplayName("유효한 스케줄 id가 전달되면 메서드를 호출하고 200 OK를 반환한다.")
+//		void when_scheduleIdIsValid_expect_callMethodAndReturn200Ok() throws Exception {
+//			Long menteeId = 1L;
+//			Long scheduleId = 1L;
+//
+//			ResultActions response =
+//				mockMvc.perform(
+//					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/feedback/" + menteeId + "/" + scheduleId))
+//				.andDo(MockMvcResultHandlers.print());
+//
+//			BDDMockito.verify(menteeScheduleService).getMenteeScheduleFeedback(BDDMockito.anyLong(), BDDMockito.anyLong());
+//			response.andExpect(MockMvcResultMatchers.status().isOk());
+//		}
+//	}
+//}

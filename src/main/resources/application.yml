@@ -1,6 +1,8 @@
 
 # mysql
 spring:
+#  profiles:
+#    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${{ secrets.DB_URL }}
@@ -21,10 +23,20 @@ mybatis:
 # springdoc
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html  # swagger-ui custom path
+    path: /swagger-ui  # swagger-ui custom path
   api-docs:
     path: /api-docs  # JSON format endpoint custom path
 
 # 로깅 레벨 설정
 logging.level:
-  cobook.buddywisdom.mapper: DEBUG
+  cobook.buddywisdom.**: DEBUG
+
+jwt:
+  header: Authorization
+  secret: ${{ secrets.JWT_SECRET }}
+  accessToken-validity-in-seconds: 3600 # 1시간
+  refreshToken-validity-in-seconds: 18000 # 5시간
+
+#jasypt:
+#  encryptor:
+#    password: ${{ secrets.JASYPT_PASSWORD }}
