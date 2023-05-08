@@ -1,6 +1,8 @@
 
 # mysql
 spring:
+#  profiles:
+#    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${{ secrets.DB_URL }}
@@ -34,3 +36,7 @@ jwt:
   secret: ${{ secrets.JWT_SECRET }}
   accessToken-validity-in-seconds: 3600 # 1시간
   refreshToken-validity-in-seconds: 18000 # 5시간
+
+#jasypt:
+#  encryptor:
+#    password: ${{ secrets.JASYPT_PASSWORD }}
