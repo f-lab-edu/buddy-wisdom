@@ -42,7 +42,7 @@ public class MenteeControllerTest {
 	@DisplayName("월별 스케줄 조회")
 	class MonthlyScheduleTest {
 		@Test
-		@WithMockCustomUser
+		@WithMockCustomUser(role = "MENTEE")
 		@DisplayName("일정 정보가 모두 전달되면 메서드를 호출하고 200 OK를 반환한다.")
 		void when_dateIsValid_expect_callMethodAndReturn200Ok() throws Exception {
 			LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
@@ -63,7 +63,7 @@ public class MenteeControllerTest {
 		}
 
 		@Test
-		@WithMockCustomUser
+		@WithMockCustomUser(role = "MENTEE")
 		@DisplayName("일정 정보가 null 값이라면 400 Bad Request가 반환된다.")
 		void when_emailFieldIsNullAndEmptyAndBlank_expect_joinToFail() throws Exception {
 			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(null, null);
@@ -83,7 +83,7 @@ public class MenteeControllerTest {
 	@DisplayName("스케줄 피드백 조회")
 	class ScheduleFeedbackTest {
 		@Test
-		@WithMockCustomUser
+		@WithMockCustomUser(role = "MENTEE")
 		@DisplayName("유효한 스케줄 id가 전달되면 메서드를 호출하고 200 OK를 반환한다.")
 		void when_scheduleIdIsValid_expect_callMethodAndReturn200Ok() throws Exception {
 			Long scheduleId = 1L;
