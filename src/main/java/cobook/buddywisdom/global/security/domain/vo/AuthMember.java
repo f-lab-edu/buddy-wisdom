@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthMember {
-    private int id;
+    private Long id;
     private String email;
     private String password;
     private String role;
