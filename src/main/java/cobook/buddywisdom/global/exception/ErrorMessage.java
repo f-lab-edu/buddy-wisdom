@@ -7,9 +7,15 @@ import lombok.Getter;
 @Getter
 public enum ErrorMessage {
 
-	NOT_FOUND_MENTEE_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 멘티 스케줄이 존재하지 않습니다."),
+	// MEMBER
 	NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "등록된 회원이 존재하지 않습니다."),
 	INVALID_CREDENTIALS_EXCEPTION(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다."),
+
+	// MENTEE
+	NOT_FOUND_MENTEE_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 멘티 스케줄이 존재하지 않습니다."),
+
+	// COACH
+	NOT_FOUND_COACH_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 코치 스케줄이 존재하지 않습니다.")
 
 	;
 

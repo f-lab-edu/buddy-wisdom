@@ -9,18 +9,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
+import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
-
-	@ExceptionHandler(NotFoundMenteeScheduleException.class)
-	public ResponseEntity<ErrorResponse> handleNotFoundMenteeScheduleException(NotFoundMenteeScheduleException exception) {
-		log.error("NotFoundMenteeScheduleException : ", exception);
-		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE);
-	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
@@ -32,4 +28,17 @@ public class ApiExceptionHandler {
 
 		return ResponseEntity.badRequest().body(errors);
 	}
+
+	@ExceptionHandler(NotFoundCoachScheduleException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundCoachScheduleException(NotFoundCoachScheduleException exception) {
+		log.error("NotFoundCoachScheduleException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_COACH_SCHEDULE);
+	}
+
+	@ExceptionHandler(NotFoundMenteeScheduleException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundMenteeScheduleException(NotFoundMenteeScheduleException exception) {
+		log.error("NotFoundMenteeScheduleException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE);
+	}
+
 }
