@@ -1,4 +1,4 @@
-package cobook.buddywisdom.auth;
+package cobook.buddywisdom.util;
 
 import cobook.buddywisdom.global.security.domain.vo.RoleType;
 import cobook.buddywisdom.global.security.CustomUserDetails;

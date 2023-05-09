@@ -22,7 +22,7 @@ import java.util.Collections;
 public class CustomUserDetails implements UserDetails, Serializable {
 
     private final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
-    private int id;
+    private Long id;
     private String email;
     private String password;
     private RoleType role;
@@ -32,7 +32,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
