@@ -1,17 +1,17 @@
-package cobook.buddywisdom.mentee.dto;
+package cobook.buddywisdom.mentee.dto.response;
 
 import java.time.LocalDateTime;
 
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 
-public record MenteeMonthlyScheduleResponse(
+public record MenteeMonthlyScheduleResponseDto(
 	Long id,
 	Long coachingScheduleId,
 	boolean cancelYn,
 	LocalDateTime possibleDateTime
 ) {
-	public static MenteeMonthlyScheduleResponse from(MenteeMonthlySchedule menteeMonthlySchedule) {
-		return new MenteeMonthlyScheduleResponse(
+	public static MenteeMonthlyScheduleResponseDto from(MenteeMonthlySchedule menteeMonthlySchedule) {
+		return new MenteeMonthlyScheduleResponseDto(
 			menteeMonthlySchedule.getId(),
 			menteeMonthlySchedule.getCoachingScheduleId(),
 			menteeMonthlySchedule.isCancelYn(),
