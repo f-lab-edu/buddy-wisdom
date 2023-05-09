@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
 import cobook.buddywisdom.util.WithMockCustomUser;
 
@@ -49,7 +49,7 @@ public class MenteeControllerTest {
 			LocalDateTime startDateTime = LocalDateTime.parse(firstDayOfMonth + "T00:00:00");
 			LocalDateTime endDateTime = LocalDateTime.parse(LocalDate.now().withDayOfMonth(firstDayOfMonth.lengthOfMonth()) + "T23:59:59");
 
-			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(startDateTime, endDateTime);
+			MenteeMonthlyScheduleRequestDto request = new MenteeMonthlyScheduleRequestDto(startDateTime, endDateTime);
 
 			ResultActions response =
 				mockMvc.perform(
@@ -66,7 +66,7 @@ public class MenteeControllerTest {
 		@WithMockCustomUser(role = "MENTEE")
 		@DisplayName("일정 정보가 null 값이라면 400 Bad Request가 반환된다.")
 		void when_emailFieldIsNullAndEmptyAndBlank_expect_joinToFail() throws Exception {
-			MenteeMonthlyScheduleRequest request = new MenteeMonthlyScheduleRequest(null, null);
+			MenteeMonthlyScheduleRequestDto request = new MenteeMonthlyScheduleRequestDto(null, null);
 
 			ResultActions response =
 				mockMvc.perform(

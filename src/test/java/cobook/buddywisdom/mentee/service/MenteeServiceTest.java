@@ -19,9 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
-import cobook.buddywisdom.mentee.dto.MenteeMonthlyScheduleResponse;
-import cobook.buddywisdom.mentee.dto.MenteeScheduleFeedbackResponse;
-import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequest;
+import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
+import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper;
 
@@ -47,7 +47,7 @@ public class MenteeServiceTest {
 			BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
 				.willReturn(menteeMonthlySchedule);
 
-			List<MenteeMonthlyScheduleResponse> expectedResponse =
+			List<MenteeMonthlyScheduleResponseDto> expectedResponse =
 				menteeScheduleService.getMenteeMonthlySchedule(menteeId, getMenteeMonthlyScheduleRequest());
 
 			Assertions.assertNotNull(expectedResponse);
@@ -63,7 +63,7 @@ public class MenteeServiceTest {
 				.given(menteeScheduleMapper.findByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
 				.willReturn(null);
 
-			List<MenteeMonthlyScheduleResponse> expectedResponse =
+			List<MenteeMonthlyScheduleResponseDto> expectedResponse =
 				menteeScheduleService.getMenteeMonthlySchedule(menteeId, getMenteeMonthlyScheduleRequest());
 
 			Assertions.assertTrue(expectedResponse.isEmpty());
@@ -86,7 +86,7 @@ public class MenteeServiceTest {
 			BDDMockito.given(menteeScheduleMapper.findByMenteeIdAndCoachingScheduleId(BDDMockito.anyLong(), BDDMockito.anyLong()))
 				.willReturn(Optional.of(menteeScheduleFeedback));
 
-			MenteeScheduleFeedbackResponse expectedResponse =
+			MenteeScheduleFeedbackResponseDto expectedResponse =
 				menteeScheduleService.getMenteeScheduleFeedback(menteeId, scheduleId);
 
 			Assertions.assertNotNull(expectedResponse);
@@ -108,11 +108,11 @@ public class MenteeServiceTest {
 		}
 	}
 
-	public static MenteeMonthlyScheduleRequest getMenteeMonthlyScheduleRequest() {
+	public static MenteeMonthlyScheduleRequestDto getMenteeMonthlyScheduleRequest() {
 		LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
 		LocalDateTime startDateTime = LocalDateTime.parse(firstDayOfMonth + "T00:00:00");
 		LocalDateTime endDateTime = LocalDateTime.parse(LocalDate.now().withDayOfMonth(firstDayOfMonth.lengthOfMonth()) + "T23:59:59");
 
-		return new MenteeMonthlyScheduleRequest(startDateTime, endDateTime);
+		return new MenteeMonthlyScheduleRequestDto(startDateTime, endDateTime);
 	}
 }
