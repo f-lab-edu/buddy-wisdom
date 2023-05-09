@@ -41,4 +41,10 @@ public class ApiExceptionHandler {
 		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE);
 	}
 
+	@ExceptionHandler(DuplicatedMenteeScheduleException.class)
+	public ResponseEntity<ErrorResponse> handleDuplicatedMenteeScheduleException(DuplicatedMenteeScheduleException exception) {
+		log.error("DuplicatedMenteeScheduleException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.DUPLICATED_MENTEE_SCHEDULE);
+	}
+
 }

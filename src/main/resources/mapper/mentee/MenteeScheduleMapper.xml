@@ -32,4 +32,29 @@
             AND ms.coaching_schedule_id = #{coachingScheduleId};
     </select>
 
+    <select id="findByMenteeIdAndCoachingScheduleIdAndCancelYn" parameterType="map" resultType="MenteeSchedule">
+        SELECT id,
+               coaching_schedule_id,
+               mentee_id,
+               cancel_yn
+        FROM mentee_schedule
+        WHERE mentee_id = #{menteeId}
+            AND coaching_schedule_id = #{coachingScheduleId}
+            AND cancel_yn = #{cancelYn}
+    </select>
+
+    <insert id="save" parameterType="MenteeSchedule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mentee_schedule(coaching_schedule_id,
+                                    mentee_id)
+        VALUES (#{coachingScheduleId},
+                #{menteeId})
+        <selectKey keyProperty="id,cancelYn" resultType="MenteeSchedule" order="AFTER">
+            SELECT id,
+                   cancel_yn
+            FROM mentee_schedule
+            WHERE mentee_id = #{menteeId}
+                AND coaching_schedule_id = #{coachingScheduleId};
+        </selectKey>
+    </insert>
+
 </mapper>
