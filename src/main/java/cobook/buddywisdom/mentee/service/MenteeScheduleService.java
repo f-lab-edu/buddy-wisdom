@@ -68,7 +68,7 @@ public class MenteeScheduleService {
 
 	@Transactional
 	public MenteeScheduleResponseDto saveMenteeSchedule(Long menteeId, Long coachingScheduleId) {
-		coachScheduleService.getCoachSchedule(coachingScheduleId);
+		coachScheduleService.getCoachSchedule(coachingScheduleId,false);
 
 		checkMenteeScheduleNotExist(coachingScheduleId);
 
