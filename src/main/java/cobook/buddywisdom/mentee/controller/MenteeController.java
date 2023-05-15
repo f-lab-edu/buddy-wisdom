@@ -1,7 +1,6 @@
 package cobook.buddywisdom.mentee.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,9 +31,9 @@ public class MenteeController {
 	}
 
 	@GetMapping(value = "/schedule")
-	public ResponseEntity<Optional<List<MenteeMonthlyScheduleResponseDto>>> getMenteeMonthlySchedule(@AuthenticationPrincipal CustomUserDetails member,
+	public ResponseEntity<List<MenteeMonthlyScheduleResponseDto>> getMenteeMonthlySchedule(@AuthenticationPrincipal CustomUserDetails member,
 																								@RequestBody @Valid MenteeMonthlyScheduleRequestDto request) {
-		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMenteeMonthlySchedule(member.getId(), request)));
+		return ResponseEntity.ok(menteeScheduleService.getMenteeMonthlySchedule(member.getId(), request));
 	}
 
 	@GetMapping(value = "/schedule/feedback/{scheduleId}")
@@ -44,8 +43,8 @@ public class MenteeController {
 	}
 
 	@GetMapping(value = "/schedule/create")
-	public ResponseEntity<Optional<List<MyCoachScheduleResponseDto>>> getMyCoachSchedule(@AuthenticationPrincipal CustomUserDetails member) {
-		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMyCoachSchedule(member.getId())));
+	public ResponseEntity<List<MyCoachScheduleResponseDto>> getMyCoachSchedule(@AuthenticationPrincipal CustomUserDetails member) {
+		return ResponseEntity.ok(menteeScheduleService.getMyCoachSchedule(member.getId()));
 	}
 
 	@PostMapping(value = "/schedule/create/{scheduleId}")
