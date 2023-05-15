@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cobook.buddywisdom.relationship.mapper.CoachingRelationshipMapper">
+
+    <select id="findByMenteeId" parameterType="Long" resultType="CoachingRelationship">
+        SELECT id,
+               coach_id,
+               mentee_id,
+               active_yn,
+               started_at,
+               expired_at
+        FROM coaching_relationship
+        WHERE mentee_id = #{menteeId}
+    </select>
+
+</mapper>
