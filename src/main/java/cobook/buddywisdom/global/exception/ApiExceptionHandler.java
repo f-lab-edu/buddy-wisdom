@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
+import cobook.buddywisdom.relationship.exception.NotFoundRelationshipException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -47,4 +48,9 @@ public class ApiExceptionHandler {
 		return ErrorResponse.toResponseEntity(ErrorMessage.DUPLICATED_MENTEE_SCHEDULE);
 	}
 
+	@ExceptionHandler(NotFoundRelationshipException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundRelationshipException(NotFoundRelationshipException exception) {
+		log.error("NotFoundRelationshipException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_COACHING_RELATIONSHIP);
+	}
 }
