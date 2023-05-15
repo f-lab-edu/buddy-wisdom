@@ -54,7 +54,7 @@ public class MenteeControllerTest {
 
 			ResultActions response =
 				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule")
+					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/monthly")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsBytes(request)))
 				.andDo(MockMvcResultHandlers.print());
@@ -70,7 +70,7 @@ public class MenteeControllerTest {
 
 			ResultActions response =
 				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule")
+					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/monthly")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsBytes(request)))
 				.andDo(MockMvcResultHandlers.print());
@@ -90,7 +90,7 @@ public class MenteeControllerTest {
 
 			ResultActions response =
 				mockMvc.perform(
-					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/feedback/" + scheduleId))
+					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + scheduleId))
 				.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(menteeScheduleService).getMenteeScheduleFeedback(BDDMockito.anyLong(), BDDMockito.anyLong());
@@ -108,7 +108,7 @@ public class MenteeControllerTest {
 
 			ResultActions response =
 				mockMvc.perform(
-						MockMvcRequestBuilders.get("/api/v1/mentees/schedule/create"))
+						MockMvcRequestBuilders.get("/api/v1/mentees/schedule"))
 					.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(menteeScheduleService).getMyCoachSchedule(authenticatedId);
@@ -122,7 +122,7 @@ public class MenteeControllerTest {
 
 			ResultActions response =
 				mockMvc.perform(
-						MockMvcRequestBuilders.post("/api/v1/mentees/schedule/create/" + scheduleId)
+						MockMvcRequestBuilders.post("/api/v1/mentees/schedule/" + scheduleId)
 							.with(SecurityMockMvcRequestPostProcessors.csrf()))
 					.andDo(MockMvcResultHandlers.print());
 
