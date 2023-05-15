@@ -183,7 +183,7 @@ public class MenteeServiceTest {
 			Long menteeId = 1L;
 			Long notExistScheduleId = 1L;
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.any()))
+			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
