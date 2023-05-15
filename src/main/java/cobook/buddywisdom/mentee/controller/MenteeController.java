@@ -30,24 +30,24 @@ public class MenteeController {
 		this.menteeScheduleService = menteeScheduleService;
 	}
 
-	@GetMapping(value = "/schedule")
+	@GetMapping(value = "/schedule/monthly")
 	public ResponseEntity<List<MenteeMonthlyScheduleResponseDto>> getMenteeMonthlySchedule(@AuthenticationPrincipal CustomUserDetails member,
 																								@RequestBody @Valid MenteeMonthlyScheduleRequestDto request) {
 		return ResponseEntity.ok(menteeScheduleService.getMenteeMonthlySchedule(member.getId(), request));
 	}
 
-	@GetMapping(value = "/schedule/feedback/{scheduleId}")
+	@GetMapping(value = "/schedule/{scheduleId}")
 	public ResponseEntity<MenteeScheduleFeedbackResponseDto> getMenteeScheduleFeedback(@AuthenticationPrincipal CustomUserDetails member,
 																					@PathVariable Long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.getMenteeScheduleFeedback(member.getId(), scheduleId));
 	}
 
-	@GetMapping(value = "/schedule/create")
+	@GetMapping(value = "/schedule")
 	public ResponseEntity<List<MyCoachScheduleResponseDto>> getMyCoachSchedule(@AuthenticationPrincipal CustomUserDetails member) {
 		return ResponseEntity.ok(menteeScheduleService.getMyCoachSchedule(member.getId()));
 	}
 
-	@PostMapping(value = "/schedule/create/{scheduleId}")
+	@PostMapping(value = "/schedule/{scheduleId}")
 	public ResponseEntity<MenteeScheduleResponseDto> createMenteeSchedule(@AuthenticationPrincipal CustomUserDetails member,
 																			@PathVariable Long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.saveMenteeSchedule(member.getId(), scheduleId));
