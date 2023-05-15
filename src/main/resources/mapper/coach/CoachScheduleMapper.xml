@@ -13,4 +13,19 @@
         WHERE id = #{id}
     </select>
 
+    <select id="findAllByCoachId" parameterType="map" resultType="CoachSchedule">
+        SELECT id,
+               coach_id,
+               possible_date_time,
+               match_yn
+        FROM coaching_schedule
+        WHERE coach_id = #{id}
+    </select>
+
+    <update id="setMatchYn" parameterType="map">
+        UPDATE coaching_schedule
+        SET match_yn = #{matchYn}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

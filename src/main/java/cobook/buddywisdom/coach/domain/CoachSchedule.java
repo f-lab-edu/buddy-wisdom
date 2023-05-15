@@ -9,5 +9,5 @@ public class CoachSchedule {
 	private Long id;
 	private Long coachId;
 	private LocalDateTime possibleDateTime;
-
+	private boolean matchYn;
 }
