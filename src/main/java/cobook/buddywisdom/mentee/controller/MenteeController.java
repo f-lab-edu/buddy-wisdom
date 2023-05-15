@@ -17,6 +17,7 @@ import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
 import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleResponseDto;
+import cobook.buddywisdom.mentee.dto.response.MyCoachScheduleResponseDto;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
 import jakarta.validation.Valid;
 
@@ -42,7 +43,12 @@ public class MenteeController {
 		return ResponseEntity.ok(menteeScheduleService.getMenteeScheduleFeedback(member.getId(), scheduleId));
 	}
 
-	@PostMapping(value = "/schedule/{scheduleId}")
+	@GetMapping(value = "/schedule/create")
+	public ResponseEntity<Optional<List<MyCoachScheduleResponseDto>>> getMyCoachSchedule(@AuthenticationPrincipal CustomUserDetails member) {
+		return ResponseEntity.ok(Optional.ofNullable(menteeScheduleService.getMyCoachSchedule(member.getId())));
+	}
+
+	@PostMapping(value = "/schedule/create/{scheduleId}")
 	public ResponseEntity<MenteeScheduleResponseDto> createMenteeSchedule(@AuthenticationPrincipal CustomUserDetails member,
 																			@PathVariable Long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.saveMenteeSchedule(member.getId(), scheduleId));

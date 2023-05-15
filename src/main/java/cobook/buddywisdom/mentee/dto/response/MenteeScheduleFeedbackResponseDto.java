@@ -6,7 +6,7 @@ import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 import jakarta.annotation.Nullable;
 
 public record MenteeScheduleFeedbackResponseDto(
-	Long id,
+	Long coachingScheduleId,
 	LocalDateTime possibleDateTime,
 	@Nullable
 	Long feedbackId,
@@ -17,7 +17,7 @@ public record MenteeScheduleFeedbackResponseDto(
 ){
 	public static MenteeScheduleFeedbackResponseDto from(MenteeScheduleFeedback menteeScheduleFeedback) {
 		return new MenteeScheduleFeedbackResponseDto(
-			menteeScheduleFeedback.getId(),
+			menteeScheduleFeedback.getCoachingScheduleId(),
 			menteeScheduleFeedback.getPossibleDateTime(),
 			menteeScheduleFeedback.getFeedbackId(),
 			menteeScheduleFeedback.getMenteeFeedback(),

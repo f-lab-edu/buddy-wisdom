@@ -9,15 +9,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenteeMonthlySchedule {
-	private Long id;
 	private Long coachingScheduleId;
-	private boolean cancelYn;
 	private LocalDateTime possibleDateTime;
 
-	public static MenteeMonthlySchedule of(Long coachingScheduleId, boolean cancelYn, LocalDateTime possibleDateTime) {
+	public static MenteeMonthlySchedule of(Long coachingScheduleId, LocalDateTime possibleDateTime) {
 		MenteeMonthlySchedule menteeMonthlySchedule = new MenteeMonthlySchedule();
 		menteeMonthlySchedule.coachingScheduleId = coachingScheduleId;
-		menteeMonthlySchedule.cancelYn = cancelYn;
 		menteeMonthlySchedule.possibleDateTime = possibleDateTime;
 		return menteeMonthlySchedule;
 	}
