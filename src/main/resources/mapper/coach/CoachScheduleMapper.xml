@@ -5,12 +5,14 @@
 
 <mapper namespace="cobook.buddywisdom.coach.mapper.CoachScheduleMapper">
 
-    <select id="findById" parameterType="map" resultType="CoachSchedule">
+    <select id="findByIdAndMatchYn" parameterType="map" resultType="CoachSchedule">
         SELECT id,
                coach_id,
-               possible_date_time
+               possible_date_time,
+               match_yn
         FROM coaching_schedule
         WHERE id = #{id}
+            AND match_yn = #{matchYn}
     </select>
 
     <select id="findAllByCoachId" parameterType="map" resultType="CoachSchedule">

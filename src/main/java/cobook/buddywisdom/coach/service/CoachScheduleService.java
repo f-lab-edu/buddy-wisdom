@@ -20,8 +20,8 @@ public class CoachScheduleService {
 		this.coachScheduleMapper = coachScheduleMapper;
 	}
 
-	public CoachSchedule getCoachSchedule(Long id) {
-		return coachScheduleMapper.findById(id)
+	public CoachSchedule getCoachSchedule(Long id, boolean matchYn) {
+		return coachScheduleMapper.findByIdAndMatchYn(id, matchYn)
 			.orElseThrow(() -> new NotFoundCoachScheduleException(ErrorMessage.NOT_FOUND_COACH_SCHEDULE));
 	}
 

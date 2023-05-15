@@ -16,7 +16,7 @@ public enum ErrorMessage {
 	DUPLICATED_MENTEE_SCHEDULE(HttpStatus.BAD_REQUEST, "이미 해당 코칭 일정으로 등록된 스케줄이 존재합니다."),
 
 	// COACH
-	NOT_FOUND_COACH_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 코치 스케줄이 존재하지 않습니다."),
+	NOT_FOUND_COACH_SCHEDULE(HttpStatus.NOT_FOUND, "이미 신청이 마감되었거나 존재하지 않는 스케줄입니다."),
 
 	// RELATIONSHIP
 	NOT_FOUND_COACHING_RELATIONSHIP(HttpStatus.NOT_FOUND, "매칭된 코칭 팀이 존재하지 않습니다.")

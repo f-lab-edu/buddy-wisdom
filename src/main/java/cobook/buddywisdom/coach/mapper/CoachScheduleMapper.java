@@ -9,7 +9,7 @@ import cobook.buddywisdom.coach.domain.CoachSchedule;
 
 @Mapper
 public interface CoachScheduleMapper {
-	Optional<CoachSchedule> findById(Long id);
+	Optional<CoachSchedule> findByIdAndMatchYn(Long id, boolean matchYn);
 	List<CoachSchedule> findAllByCoachId(Long coachId);
 	void setMatchYn(Long id, boolean matchYn);
 }
