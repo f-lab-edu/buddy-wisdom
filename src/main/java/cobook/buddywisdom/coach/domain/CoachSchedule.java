@@ -14,8 +14,9 @@ public class CoachSchedule {
 	private LocalDateTime possibleDateTime;
 	private boolean matchYn;
 
-	public static CoachSchedule of(Long coachId, LocalDateTime possibleDateTime, boolean matchYn) {
+	public static CoachSchedule of(Long id, Long coachId, LocalDateTime possibleDateTime, boolean matchYn) {
 		CoachSchedule coachSchedule = new CoachSchedule();
+		coachSchedule.id = id;
 		coachSchedule.coachId = coachId;
 		coachSchedule.possibleDateTime = possibleDateTime;
 		coachSchedule.matchYn = matchYn;
