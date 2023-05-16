@@ -137,11 +137,11 @@ public class MenteeServiceTest {
 				CoachingRelationship.of(coachId, menteeId, true, LocalDateTime.now(), LocalDateTime.now().plusMonths(2));
 			CoachSchedule coachSchedule = CoachSchedule.of(coachId, LocalDateTime.now(), false);
 
-			BDDMockito.given(coachScheduleService.getAllCoachingSchedule(BDDMockito.anyLong()))
+			BDDMockito.given(coachScheduleService.getAllCoachingSchedule(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
 				.willReturn(List.of(coachSchedule));
 
 			List<CoachSchedule> expectedResponse =
-				coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId());
+				coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId(), LocalDate.now(), LocalDate.now().plusDays(8));
 
 			Assertions.assertNotNull(expectedResponse);
 			Assertions.assertEquals(1, expectedResponse.size());
