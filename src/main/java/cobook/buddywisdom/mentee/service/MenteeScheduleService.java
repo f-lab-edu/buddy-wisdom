@@ -1,5 +1,7 @@
 package cobook.buddywisdom.mentee.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,8 @@ public class MenteeScheduleService {
 	private final CoachScheduleService coachScheduleService;
 	private final CoachingRelationshipService coachingRelationshipService;
 
+	private static final int DEFAULT_DAYS = 8;
+
 	public MenteeScheduleService(MenteeScheduleMapper menteeScheduleMapper, CoachScheduleService coachScheduleService,
 		CoachingRelationshipService coachingRelationshipService) {
 		this.menteeScheduleMapper = menteeScheduleMapper;
@@ -58,8 +62,10 @@ public class MenteeScheduleService {
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(Long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
+		LocalDate today = LocalDate.now();
+
 		List<CoachSchedule> coachScheduleList =
-			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId());
+			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId(), today, today.plusDays(DEFAULT_DAYS));
 
 		return Optional.ofNullable(coachScheduleList)
 			.map(m -> m.stream().map(MyCoachScheduleResponseDto::from).toList())

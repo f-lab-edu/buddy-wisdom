@@ -1,5 +1,7 @@
 package cobook.buddywisdom.coach.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,8 +27,8 @@ public class CoachScheduleService {
 			.orElseThrow(() -> new NotFoundCoachScheduleException(ErrorMessage.NOT_FOUND_COACH_SCHEDULE));
 	}
 
-	public List<CoachSchedule> getAllCoachingSchedule(Long coachId) {
-		return coachScheduleMapper.findAllByCoachId(coachId);
+	public List<CoachSchedule> getAllCoachingSchedule(Long coachId, LocalDate startDateTime, LocalDate endDateTime) {
+		return coachScheduleMapper.findAllByCoachIdAndPossibleDateTime(coachId, startDateTime, endDateTime);
 	}
 
 	public void updateMatchYn(Long id, boolean matchYn) {

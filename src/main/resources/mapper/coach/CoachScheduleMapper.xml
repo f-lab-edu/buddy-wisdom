@@ -15,13 +15,14 @@
             AND match_yn = #{matchYn}
     </select>
 
-    <select id="findAllByCoachId" parameterType="map" resultType="CoachSchedule">
+    <select id="findAllByCoachIdAndPossibleDateTime" parameterType="map" resultType="CoachSchedule">
         SELECT id,
                coach_id,
                possible_date_time,
                match_yn
         FROM coaching_schedule
-        WHERE coach_id = #{id}
+        WHERE coach_id = #{coachId}
+            AND possible_date_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
 
     <update id="setMatchYn" parameterType="map">
