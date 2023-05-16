@@ -8,5 +8,5 @@ import cobook.buddywisdom.relationship.domain.CoachingRelationship;
 
 @Mapper
 public interface CoachingRelationshipMapper {
-	Optional<CoachingRelationship> findByMenteeId(Long menteeId);
+	Optional<CoachingRelationship> findByMenteeId(long menteeId);
 }

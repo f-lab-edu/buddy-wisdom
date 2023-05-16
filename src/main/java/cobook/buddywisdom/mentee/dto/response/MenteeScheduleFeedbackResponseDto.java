@@ -6,10 +6,10 @@ import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 import jakarta.annotation.Nullable;
 
 public record MenteeScheduleFeedbackResponseDto(
-	Long coachingScheduleId,
+	long coachingScheduleId,
 	LocalDateTime possibleDateTime,
 	@Nullable
-	Long feedbackId,
+	long feedbackId,
 	@Nullable
 	String menteeFeedBack,
 	@Nullable

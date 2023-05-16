@@ -11,7 +11,7 @@ import cobook.buddywisdom.coach.domain.CoachSchedule;
 
 @Mapper
 public interface CoachScheduleMapper {
-	Optional<CoachSchedule> findByIdAndMatchYn(Long id, boolean matchYn);
-	List<CoachSchedule> findAllByCoachIdAndPossibleDateTime(Long coachId, LocalDate startDateTime, LocalDate endDateTime);
-	void setMatchYn(Long id, boolean matchYn);
+	Optional<CoachSchedule> findByIdAndMatchYn(long id, boolean matchYn);
+	List<CoachSchedule> findAllByCoachIdAndPossibleDateTime(long coachId, LocalDate startDateTime, LocalDate endDateTime);
+	void setMatchYn(long id, boolean matchYn);
 }

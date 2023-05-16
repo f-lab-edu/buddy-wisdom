@@ -12,8 +12,8 @@ import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 
 @Mapper
 public interface MenteeScheduleMapper {
-	List<MenteeMonthlySchedule> findAllByMenteeIdAndPossibleDateTime(Long menteeId, LocalDateTime startDateTime, LocalDateTime endDateTime);
-	Optional<MenteeScheduleFeedback> findByMenteeIdAndCoachingScheduleId(Long menteeId, Long coachingScheduleId);
-	Optional<MenteeSchedule> findByCoachingScheduleId(Long coachingScheduleId);
+	List<MenteeMonthlySchedule> findAllByMenteeIdAndPossibleDateTime(long menteeId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+	Optional<MenteeScheduleFeedback> findByMenteeIdAndCoachingScheduleId(long menteeId, long coachingScheduleId);
+	Optional<MenteeSchedule> findByCoachingScheduleId(long coachingScheduleId);
 	void save(MenteeSchedule menteeSchedule);
 }

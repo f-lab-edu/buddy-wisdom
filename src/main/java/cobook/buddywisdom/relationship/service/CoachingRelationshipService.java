@@ -2,7 +2,6 @@ package cobook.buddywisdom.relationship.service;
 
 import org.springframework.stereotype.Service;
 
-import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.relationship.domain.CoachingRelationship;
 import cobook.buddywisdom.relationship.exception.NotFoundRelationshipException;
@@ -17,7 +16,7 @@ public class CoachingRelationshipService {
 		this.coachingRelationshipMapper = coachingRelationshipMapper;
 	}
 
-	public CoachingRelationship getCoachingRelationshipByMenteeId(Long menteeId) {
+	public CoachingRelationship getCoachingRelationshipByMenteeId(long menteeId) {
 		return coachingRelationshipMapper.findByMenteeId(menteeId)
 			.orElseThrow(() -> new NotFoundRelationshipException(ErrorMessage.NOT_FOUND_COACHING_RELATIONSHIP));
 	}

@@ -43,7 +43,7 @@ public class MenteeScheduleService {
 		this.coachingRelationshipService = coachingRelationshipService;
 	}
 
-	public List<MenteeMonthlyScheduleResponseDto> getMenteeMonthlySchedule(Long menteeId, MenteeMonthlyScheduleRequestDto request) {
+	public List<MenteeMonthlyScheduleResponseDto> getMenteeMonthlySchedule(long menteeId, MenteeMonthlyScheduleRequestDto request) {
 		List<MenteeMonthlySchedule> menteeMonthlyScheduleList =
 			menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(menteeId, request.startDateTime(), request.endDateTime());
 
@@ -52,14 +52,14 @@ public class MenteeScheduleService {
 			.orElseGet(Collections::emptyList);
 	}
 
-	public MenteeScheduleFeedbackResponseDto getMenteeScheduleFeedback(Long menteeId, Long coachingScheduleId) {
+	public MenteeScheduleFeedbackResponseDto getMenteeScheduleFeedback(long menteeId, long coachingScheduleId) {
 		MenteeScheduleFeedback menteeScheduleFeedback = menteeScheduleMapper.findByMenteeIdAndCoachingScheduleId(menteeId, coachingScheduleId)
 			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
 
 		return MenteeScheduleFeedbackResponseDto.from(menteeScheduleFeedback);
 	}
 
-	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(Long menteeId) {
+	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
 		LocalDate today = LocalDate.now();
@@ -73,7 +73,7 @@ public class MenteeScheduleService {
 	}
 
 	@Transactional
-	public MenteeScheduleResponseDto saveMenteeSchedule(Long menteeId, Long coachingScheduleId) {
+	public MenteeScheduleResponseDto saveMenteeSchedule(long menteeId, long coachingScheduleId) {
 		coachScheduleService.getCoachSchedule(coachingScheduleId,false);
 
 		checkMenteeScheduleNotExist(coachingScheduleId);
@@ -86,7 +86,7 @@ public class MenteeScheduleService {
 		return MenteeScheduleResponseDto.from(menteeSchedule);
 	}
 
-	public void checkMenteeScheduleNotExist(Long coachingScheduleId) {
+	public void checkMenteeScheduleNotExist(long coachingScheduleId) {
 		Optional<MenteeSchedule> menteeSchedule = menteeScheduleMapper.findByCoachingScheduleId(coachingScheduleId);
 
 		if (menteeSchedule.isEmpty()) {

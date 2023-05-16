@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 
 public record MenteeMonthlyScheduleResponseDto(
-	Long coachingScheduleId,
+	long coachingScheduleId,
 	LocalDateTime possibleDateTime
 ) {
 	public static MenteeMonthlyScheduleResponseDto from(MenteeMonthlySchedule menteeMonthlySchedule) {

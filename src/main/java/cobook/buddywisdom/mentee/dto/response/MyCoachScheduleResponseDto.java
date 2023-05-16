@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 
 public record MyCoachScheduleResponseDto(
-	Long id,
-	Long coachId,
+	long id,
+	long coachId,
 	LocalDateTime possibleDateTime,
 	boolean matchYn
 ) {

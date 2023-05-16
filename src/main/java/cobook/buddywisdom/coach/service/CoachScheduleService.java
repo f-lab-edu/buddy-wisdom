@@ -22,16 +22,16 @@ public class CoachScheduleService {
 		this.coachScheduleMapper = coachScheduleMapper;
 	}
 
-	public CoachSchedule getCoachSchedule(Long id, boolean matchYn) {
+	public CoachSchedule getCoachSchedule(long id, boolean matchYn) {
 		return coachScheduleMapper.findByIdAndMatchYn(id, matchYn)
 			.orElseThrow(() -> new NotFoundCoachScheduleException(ErrorMessage.NOT_FOUND_COACH_SCHEDULE));
 	}
 
-	public List<CoachSchedule> getAllCoachingSchedule(Long coachId, LocalDate startDateTime, LocalDate endDateTime) {
+	public List<CoachSchedule> getAllCoachingSchedule(long coachId, LocalDate startDateTime, LocalDate endDateTime) {
 		return coachScheduleMapper.findAllByCoachIdAndPossibleDateTime(coachId, startDateTime, endDateTime);
 	}
 
-	public void updateMatchYn(Long id, boolean matchYn) {
+	public void updateMatchYn(long id, boolean matchYn) {
 		coachScheduleMapper.setMatchYn(id, matchYn);
 	}
 }

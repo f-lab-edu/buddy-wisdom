@@ -38,7 +38,7 @@ public class MenteeController {
 
 	@GetMapping(value = "/schedule/{scheduleId}")
 	public ResponseEntity<MenteeScheduleFeedbackResponseDto> getMenteeScheduleFeedback(@AuthenticationPrincipal CustomUserDetails member,
-																					@PathVariable Long scheduleId) {
+																					@PathVariable final long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.getMenteeScheduleFeedback(member.getId(), scheduleId));
 	}
 
@@ -49,7 +49,7 @@ public class MenteeController {
 
 	@PostMapping(value = "/schedule/{scheduleId}")
 	public ResponseEntity<MenteeScheduleResponseDto> createMenteeSchedule(@AuthenticationPrincipal CustomUserDetails member,
-																			@PathVariable Long scheduleId) {
+																			@PathVariable final long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.saveMenteeSchedule(member.getId(), scheduleId));
 	}
 }
