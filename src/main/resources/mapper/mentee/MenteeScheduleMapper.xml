@@ -5,20 +5,18 @@
 
 <mapper namespace="cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper">
 
-    <select id="findByMenteeIdAndPossibleDateTime" parameterType="map" resultType="MenteeMonthlySchedule">
-        SELECT ms.id,
-               ms.coaching_schedule_id,
-               ms.cancel_yn,
+    <select id="findAllByMenteeIdAndPossibleDateTime" parameterType="map" resultType="MenteeMonthlySchedule">
+        SELECT ms.coaching_schedule_id,
                cs.possible_date_time
         FROM mentee_schedule ms
         JOIN coaching_schedule cs
             ON ms.coaching_schedule_id = cs.id
         WHERE mentee_id = #{menteeId}
-            AND cs.possible_date_time BETWEEN #{startDateTime} AND #{endDateTime};
+            AND cs.possible_date_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
 
     <select id="findByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeScheduleFeedback">
-        SELECT ms.id,
+        SELECT ms.coaching_schedule_id,
                cs.possible_date_time,
                fb.id AS feedback_id,
                fb.coach_feedback,
@@ -27,9 +25,21 @@
         JOIN coaching_schedule cs
             ON ms.coaching_schedule_id = cs.id
         LEFT JOIN feedback fb
-            ON ms.id = fb.mentee_schedule_id
+            ON ms.coaching_schedule_id = fb.mentee_schedule_id
         WHERE ms.mentee_id = #{menteeId}
-            AND ms.coaching_schedule_id = #{coachingScheduleId};
+            AND ms.coaching_schedule_id = #{coachingScheduleId}
     </select>
+
+    <select id="findByCoachingScheduleId" parameterType="map" resultType="MenteeSchedule">
+        SELECT coaching_schedule_id,
+               mentee_id
+        FROM mentee_schedule
+        WHERE coaching_schedule_id = #{coachingScheduleId}
+    </select>
+
+    <insert id="save" parameterType="MenteeSchedule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mentee_schedule(coaching_schedule_id, mentee_id)
+        VALUES (#{coachingScheduleId}, #{menteeId})
+    </insert>
 
 </mapper>

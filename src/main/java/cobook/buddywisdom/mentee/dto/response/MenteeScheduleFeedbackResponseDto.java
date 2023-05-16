@@ -1,23 +1,23 @@
-package cobook.buddywisdom.mentee.dto;
+package cobook.buddywisdom.mentee.dto.response;
 
 import java.time.LocalDateTime;
 
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
 import jakarta.annotation.Nullable;
 
-public record MenteeScheduleFeedbackResponse(
-	Long id,
+public record MenteeScheduleFeedbackResponseDto(
+	long coachingScheduleId,
 	LocalDateTime possibleDateTime,
 	@Nullable
-	Long feedbackId,
+	long feedbackId,
 	@Nullable
 	String menteeFeedBack,
 	@Nullable
 	String coachFeedback
 ){
-	public static MenteeScheduleFeedbackResponse from(MenteeScheduleFeedback menteeScheduleFeedback) {
-		return new MenteeScheduleFeedbackResponse(
-			menteeScheduleFeedback.getId(),
+	public static MenteeScheduleFeedbackResponseDto from(MenteeScheduleFeedback menteeScheduleFeedback) {
+		return new MenteeScheduleFeedbackResponseDto(
+			menteeScheduleFeedback.getCoachingScheduleId(),
 			menteeScheduleFeedback.getPossibleDateTime(),
 			menteeScheduleFeedback.getFeedbackId(),
 			menteeScheduleFeedback.getMenteeFeedback(),
