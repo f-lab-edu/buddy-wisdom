@@ -3,6 +3,7 @@ package cobook.buddywisdom.mentee.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class MenteeScheduleService {
 			.stream()
 			.flatMap(List::stream)
 			.map(MenteeMonthlyScheduleResponseDto::from)
-			.toList();
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	public MenteeScheduleFeedbackResponseDto getMenteeScheduleFeedback(long menteeId, long coachingScheduleId) {
@@ -71,7 +72,7 @@ public class MenteeScheduleService {
 			.stream()
 			.flatMap(List::stream)
 			.map(MyCoachScheduleResponseDto::from)
-			.toList();
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	@Transactional
