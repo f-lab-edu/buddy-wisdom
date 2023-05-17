@@ -16,12 +16,6 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
@@ -242,27 +236,25 @@ public class MenteeScheduleServiceTest {
 		@Test
 		@DisplayName("일정 변경 시간이 지났다면 NotAllowedUpdateException이 발생한다.")
 		void when_timeHasPassed_expect_throwsNotAllowedUpdateException() {
-			UpdateMenteeScheduleRequestDto request = new UpdateMenteeScheduleRequestDto(1L, 2L);
 			CoachSchedule currentCoachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now().minusDays(1), true);
 
 			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
 				.willReturn(currentCoachSchedule);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
-					menteeScheduleService.checkIfUpdatePossible(request))
+					menteeScheduleService.checkIfUpdatePossible(SCHEDULE_ID))
 				.isInstanceOf(NotAllowedUpdateException.class);
 		}
 
 		@Test
 		@DisplayName("일정 변경 시간이 지나지 않았다면 변경 가능함이 확인된다.")
 		void when_timeHasNotPassed_expect_validateUpdatePossibility() {
-			UpdateMenteeScheduleRequestDto request = new UpdateMenteeScheduleRequestDto(1L, 2L);
 			CoachSchedule currentCoachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now().plusDays(1), true);
 
 			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
 				.willReturn(currentCoachSchedule);
 
-			menteeScheduleService.checkIfUpdatePossible(request);
+			menteeScheduleService.checkIfUpdatePossible(SCHEDULE_ID);
 
 			BDDMockito.verify(coachScheduleService).getCoachSchedule(1L, true);
 		}
@@ -270,13 +262,11 @@ public class MenteeScheduleServiceTest {
 		@Test
 		@DisplayName("기존 스케줄 정보가 존재하지 않는다면 NotFoundCoachScheduleException이 발생한다.")
 		void when_currentScheduleNotExists_expect_throwsNotFoundCoachScheduleException() {
-			UpdateMenteeScheduleRequestDto request = new UpdateMenteeScheduleRequestDto(1L, 2L);
-
 			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
-					menteeScheduleService.checkIfUpdatePossible(request))
+					menteeScheduleService.checkIfUpdatePossible(SCHEDULE_ID))
 				.isInstanceOf(NotFoundCoachScheduleException.class);
 		}
 
