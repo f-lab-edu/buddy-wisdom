@@ -103,18 +103,21 @@ public class MenteeScheduleService {
 
 	@Transactional
 	public void updateMenteeSchedule(UpdateMenteeScheduleRequestDto request) {
-		checkIfUpdatePossible(request);
+		long currentCoachingId = request.currentCoachingId();
+		long newCoachingId = request.newCoachingId();
 
-		CoachSchedule newCoachSchedule = coachScheduleService.getCoachSchedule(request.newCoachingId(), false);
+		checkIfUpdatePossible(currentCoachingId);
 
-		menteeScheduleMapper.updateCoachingScheduleId(request.currentCoachingId(), newCoachSchedule.getId());
+		coachScheduleService.getCoachSchedule(newCoachingId, false);
 
-		coachScheduleService.updateMatchYn(request.currentCoachingId(), false);
-		coachScheduleService.updateMatchYn(newCoachSchedule.getId(), true);
+		menteeScheduleMapper.updateCoachingScheduleId(currentCoachingId, newCoachingId);
+
+		coachScheduleService.updateMatchYn(currentCoachingId, false);
+		coachScheduleService.updateMatchYn(newCoachingId, true);
 	}
 
-	public void checkIfUpdatePossible(UpdateMenteeScheduleRequestDto request) {
-		CoachSchedule currentCoachSchedule = coachScheduleService.getCoachSchedule(request.currentCoachingId(), true);
+	public void checkIfUpdatePossible(long coachScheduleId) {
+		CoachSchedule currentCoachSchedule = coachScheduleService.getCoachSchedule(coachScheduleId, true);
 
 		LocalDate date = LocalDate.from(currentCoachSchedule.getPossibleDateTime());
 
