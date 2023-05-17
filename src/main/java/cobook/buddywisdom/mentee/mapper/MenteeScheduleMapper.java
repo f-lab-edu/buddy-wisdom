@@ -16,4 +16,5 @@ public interface MenteeScheduleMapper {
 	Optional<MenteeScheduleFeedback> findByMenteeIdAndCoachingScheduleId(long menteeId, long coachingScheduleId);
 	Optional<MenteeSchedule> findByCoachingScheduleId(long coachingScheduleId);
 	void save(MenteeSchedule menteeSchedule);
+	void updateCoachingScheduleId(long currentCoachingId, long newCoachingId);
 }

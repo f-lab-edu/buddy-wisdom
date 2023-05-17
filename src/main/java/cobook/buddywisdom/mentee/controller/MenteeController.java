@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cobook.buddywisdom.global.security.CustomUserDetails;
+import cobook.buddywisdom.mentee.dto.request.UpdateMenteeScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
 import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
@@ -51,5 +53,11 @@ public class MenteeController {
 	public ResponseEntity<MenteeScheduleResponseDto> createMenteeSchedule(@AuthenticationPrincipal CustomUserDetails member,
 																			@PathVariable final long scheduleId) {
 		return ResponseEntity.ok(menteeScheduleService.saveMenteeSchedule(member.getId(), scheduleId));
+	}
+
+	@PatchMapping(value = "/schedule")
+	public ResponseEntity<Void> update(@RequestBody @Valid UpdateMenteeScheduleRequestDto request) {
+		menteeScheduleService.updateMenteeSchedule(request);
+		return ResponseEntity.ok().build();
 	}
 }

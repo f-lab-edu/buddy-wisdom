@@ -14,6 +14,7 @@ public enum ErrorMessage {
 	// MENTEE
 	NOT_FOUND_MENTEE_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 멘티 스케줄이 존재하지 않습니다."),
 	DUPLICATED_MENTEE_SCHEDULE(HttpStatus.BAD_REQUEST, "이미 해당 코칭 일정으로 등록된 스케줄이 존재합니다."),
+	NOT_ALLOWED_UPDATE_SCHEDULE(HttpStatus.BAD_REQUEST, "변경 가능 시간이 지났으므로 취소 요청을 진행해 주세요."),
 
 	// COACH
 	NOT_FOUND_COACH_SCHEDULE(HttpStatus.NOT_FOUND, "이미 신청이 마감되었거나 존재하지 않는 스케줄입니다."),
