@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
+import cobook.buddywisdom.mentee.dto.request.UpdateMenteeScheduleRequestDto;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
 import cobook.buddywisdom.util.WithMockCustomUser;
 
@@ -128,6 +129,48 @@ public class MenteeControllerTest {
 
 			BDDMockito.verify(menteeScheduleService).saveMenteeSchedule(BDDMockito.anyLong(), BDDMockito.anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
+		}
+	}
+
+	@Nested
+	@DisplayName("코칭 일정 변경")
+	@WithMockCustomUser(role = "MENTEE")
+	class UpdateScheduleTest {
+
+		@Test
+		@DisplayName("스케줄 정보가 모두 전달되면 메서드를 호출하고 200 OK를 반환한다.")
+		void when_scheduleInformationIsValid_expect_callMethodAndReturn200Ok() throws Exception {
+			UpdateMenteeScheduleRequestDto request =
+				new UpdateMenteeScheduleRequestDto(1L, 2L);
+
+			BDDMockito.willDoNothing().given(menteeScheduleService).updateMenteeSchedule(BDDMockito.any());
+
+			ResultActions response =
+				mockMvc.perform(
+						MockMvcRequestBuilders.patch("/api/v1/mentees/schedule")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(request))
+							.with(SecurityMockMvcRequestPostProcessors.csrf()))
+					.andDo(MockMvcResultHandlers.print());
+
+			BDDMockito.verify(menteeScheduleService).updateMenteeSchedule(BDDMockito.any(UpdateMenteeScheduleRequestDto.class));
+			response.andExpect(MockMvcResultMatchers.status().isOk());
+		}
+
+		@Test
+		@DisplayName("스케줄 정보가 null 값이라면 400 Bad Request가 반환된다.")
+		void when_scheduleInformationIsNull_expect_return400BadRequest() throws Exception {
+			UpdateMenteeScheduleRequestDto request = new UpdateMenteeScheduleRequestDto(null, null);
+
+			ResultActions response =
+				mockMvc.perform(
+						MockMvcRequestBuilders.patch("/api/v1/mentees/schedule")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(request))
+							.with(SecurityMockMvcRequestPostProcessors.csrf()))
+					.andDo(MockMvcResultHandlers.print());
+
+			response.andExpect(MockMvcResultMatchers.status().isBadRequest());
 		}
 	}
 }

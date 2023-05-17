@@ -14,12 +14,14 @@ import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
+import cobook.buddywisdom.mentee.dto.request.UpdateMenteeScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
 import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MyCoachScheduleResponseDto;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
+import cobook.buddywisdom.mentee.exception.NotAllowedUpdateException;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper;
 import cobook.buddywisdom.relationship.domain.CoachingRelationship;
@@ -97,5 +99,30 @@ public class MenteeScheduleService {
 		}
 
 		throw new DuplicatedMenteeScheduleException(ErrorMessage.DUPLICATED_MENTEE_SCHEDULE);
+	}
+
+	@Transactional
+	public void updateMenteeSchedule(UpdateMenteeScheduleRequestDto request) {
+		long currentCoachingId = request.currentCoachingId();
+		long newCoachingId = request.newCoachingId();
+
+		checkIfUpdatePossible(currentCoachingId);
+
+		coachScheduleService.getCoachSchedule(newCoachingId, false);
+
+		menteeScheduleMapper.updateCoachingScheduleId(currentCoachingId, newCoachingId);
+
+		coachScheduleService.updateMatchYn(currentCoachingId, false);
+		coachScheduleService.updateMatchYn(newCoachingId, true);
+	}
+
+	public void checkIfUpdatePossible(long coachScheduleId) {
+		CoachSchedule currentCoachSchedule = coachScheduleService.getCoachSchedule(coachScheduleId, true);
+
+		LocalDate date = LocalDate.from(currentCoachSchedule.getPossibleDateTime());
+
+		if (!LocalDate.now().isBefore(date)) {
+			throw new NotAllowedUpdateException(ErrorMessage.NOT_ALLOWED_UPDATE_SCHEDULE);
+		}
 	}
 }

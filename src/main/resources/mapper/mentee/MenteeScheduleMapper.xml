@@ -37,9 +37,15 @@
         WHERE coaching_schedule_id = #{coachingScheduleId}
     </select>
 
-    <insert id="save" parameterType="MenteeSchedule" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="MenteeSchedule">
         INSERT INTO mentee_schedule(coaching_schedule_id, mentee_id)
         VALUES (#{coachingScheduleId}, #{menteeId})
     </insert>
+
+    <update id="updateCoachingScheduleId" parameterType="map">
+        UPDATE mentee_schedule
+        SET coaching_schedule_id = #{newCoachingId}
+        WHERE coaching_schedule_id = #{currentCoachingId}
+    </update>
 
 </mapper>
