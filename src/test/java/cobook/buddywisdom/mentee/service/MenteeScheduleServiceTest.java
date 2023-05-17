@@ -220,8 +220,8 @@ public class MenteeScheduleServiceTest {
 			UpdateMenteeScheduleRequestDto request =
 				new UpdateMenteeScheduleRequestDto(currentCoachingId, newCoachingId);
 
-			CoachSchedule currentCoachSchedule = CoachSchedule.of(currentCoachingId, COACH_ID, LocalDateTime.now(), true);
-			CoachSchedule newCoachSchedule = CoachSchedule.of(newCoachingId, COACH_ID, LocalDateTime.now(), false);
+			CoachSchedule currentCoachSchedule = CoachSchedule.of(currentCoachingId, COACH_ID, LocalDateTime.now().plusDays(1), true);
+			CoachSchedule newCoachSchedule = CoachSchedule.of(newCoachingId, COACH_ID, LocalDateTime.now().plusDays(1), false);
 
 			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
 					.willReturn(currentCoachSchedule);
