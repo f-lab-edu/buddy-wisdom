@@ -118,7 +118,7 @@ public class MenteeScheduleService {
 
 		LocalDate date = LocalDate.from(currentCoachSchedule.getPossibleDateTime());
 
-		if (LocalDate.now().isAfter(date)) {
+		if (!LocalDate.now().isBefore(date)) {
 			throw new NotAllowedUpdateException(ErrorMessage.NOT_ALLOWED_UPDATE_SCHEDULE);
 		}
 	}
