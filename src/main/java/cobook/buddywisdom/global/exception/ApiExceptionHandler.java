@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
+import cobook.buddywisdom.cancellation.exception.NotFoundCancelRequestException;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotAllowedUpdateException;
@@ -59,5 +61,17 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleNotAllowedUpdateException(NotAllowedUpdateException exception) {
 		log.error("NotAllowedUpdateException : ", exception);
 		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_ALLOWED_UPDATE_SCHEDULE);
+	}
+
+	@ExceptionHandler(NotFoundCancelRequestException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundCancelRequestException(NotFoundCancelRequestException exception) {
+		log.error("NotFoundCancelRequestException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_CANCEL_REQUEST);
+	}
+
+	@ExceptionHandler(ConfirmedCancelRequestException.class)
+	public ResponseEntity<ErrorResponse> handleConfirmedCancelRequestException(ConfirmedCancelRequestException exception) {
+		log.error("ConfirmedCancelRequestException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.CONFIRMED_CANCEL_REQUEST);
 	}
 }

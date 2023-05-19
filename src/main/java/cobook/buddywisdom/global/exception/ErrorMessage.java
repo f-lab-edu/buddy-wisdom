@@ -20,8 +20,11 @@ public enum ErrorMessage {
 	NOT_FOUND_COACH_SCHEDULE(HttpStatus.NOT_FOUND, "이미 신청이 마감되었거나 존재하지 않는 스케줄입니다."),
 
 	// RELATIONSHIP
-	NOT_FOUND_COACHING_RELATIONSHIP(HttpStatus.NOT_FOUND, "매칭된 코칭 팀이 존재하지 않습니다.")
+	NOT_FOUND_COACHING_RELATIONSHIP(HttpStatus.NOT_FOUND, "매칭된 코칭 팀이 존재하지 않습니다."),
 
+	// CANCEL_REQUEST
+	NOT_FOUND_CANCEL_REQUEST(HttpStatus.NOT_FOUND, "등록된 일정 취소 요청이 존재하지 않습니다."),
+	CONFIRMED_CANCEL_REQUEST(HttpStatus.BAD_REQUEST, "이미 확인이 완료된 취소 요청입니다.")
 	;
 
 	private HttpStatus status;
