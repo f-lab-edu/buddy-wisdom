@@ -56,10 +56,15 @@ public class MenteeScheduleService {
 	}
 
 	public MenteeScheduleFeedbackResponseDto getMenteeScheduleFeedback(long menteeId, long coachingScheduleId) {
-		MenteeScheduleFeedback menteeScheduleFeedback = menteeScheduleMapper.findByMenteeIdAndCoachingScheduleId(menteeId, coachingScheduleId)
+		MenteeScheduleFeedback menteeScheduleFeedback = menteeScheduleMapper.findWithFeedbackByMenteeIdAndCoachingScheduleId(menteeId, coachingScheduleId)
 			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
 
 		return MenteeScheduleFeedbackResponseDto.from(menteeScheduleFeedback);
+	}
+
+	public MenteeSchedule getMenteeSchedule(long menteeId, long coachingScheduleId) {
+		return menteeScheduleMapper.findByMenteeIdAndCoachingScheduleId(menteeId, coachingScheduleId)
+			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
 	}
 
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
@@ -124,5 +129,13 @@ public class MenteeScheduleService {
 		if (!LocalDate.now().isBefore(date)) {
 			throw new NotAllowedUpdateException(ErrorMessage.NOT_ALLOWED_UPDATE_SCHEDULE);
 		}
+	}
+
+	@Transactional
+	public void deleteMenteeSchedule(long menteeScheduleId) {
+		MenteeSchedule menteeSchedule = menteeScheduleMapper.findByCoachingScheduleId(menteeScheduleId)
+			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
+
+		menteeScheduleMapper.deleteByCoachingScheduleId(menteeSchedule.getCoachingScheduleId());
 	}
 }

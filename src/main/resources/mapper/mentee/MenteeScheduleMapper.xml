@@ -5,6 +5,11 @@
 
 <mapper namespace="cobook.buddywisdom.mentee.mapper.MenteeScheduleMapper">
 
+    <sql id="menteeScheduleColumns">
+        coaching_schedule_id,
+        mentee_id
+    </sql>
+
     <select id="findAllByMenteeIdAndPossibleDateTime" parameterType="map" resultType="MenteeMonthlySchedule">
         SELECT ms.coaching_schedule_id,
                cs.possible_date_time
@@ -15,7 +20,7 @@
             AND cs.possible_date_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
 
-    <select id="findByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeScheduleFeedback">
+    <select id="findWithFeedbackByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeScheduleFeedback">
         SELECT ms.coaching_schedule_id,
                cs.possible_date_time,
                fb.id AS feedback_id,
@@ -30,9 +35,17 @@
             AND ms.coaching_schedule_id = #{coachingScheduleId}
     </select>
 
+    <select id="findByMenteeIdAndCoachingScheduleId" parameterType="map" resultType="MenteeSchedule">
+        SELECT
+            <include refid="menteeScheduleColumns"></include>
+        FROM mentee_schedule
+        WHERE mentee_id = #{menteeId}
+          AND coaching_schedule_id = #{coachingScheduleId}
+    </select>
+
     <select id="findByCoachingScheduleId" parameterType="map" resultType="MenteeSchedule">
-        SELECT coaching_schedule_id,
-               mentee_id
+        SELECT
+            <include refid="menteeScheduleColumns"></include>
         FROM mentee_schedule
         WHERE coaching_schedule_id = #{coachingScheduleId}
     </select>
@@ -47,5 +60,10 @@
         SET coaching_schedule_id = #{newCoachingId}
         WHERE coaching_schedule_id = #{currentCoachingId}
     </update>
+
+    <delete id="deleteByCoachingScheduleId" parameterType="long">
+        DELETE FROM mentee_schedule
+        WHERE coaching_schedule_id = #{coachingScheduleId}
+    </delete>
 
 </mapper>
