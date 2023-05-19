@@ -39,7 +39,7 @@
         ORDER BY id DESC
     </select>
 
-    <insert id="save" parameterType="CancelRequest" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="CancelRequest">
         INSERT INTO cancel_request(
                                    mentee_schedule_id,
                                    sender_id,
@@ -66,8 +66,8 @@
 
     <update id="updateConfirmYn" parameterType="map">
         UPDATE cancel_request
-        SET confirm_yn = #{confirmYn}
-            AND updated_at = NOW()
+        SET confirm_yn = #{confirmYn},
+            updated_at = NOW()
         WHERE id = #{id}
     </update>
 
