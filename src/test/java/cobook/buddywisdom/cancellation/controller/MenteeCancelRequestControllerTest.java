@@ -1,5 +1,7 @@
 package cobook.buddywisdom.cancellation.controller;
 
+import static org.mockito.ArgumentMatchers.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import cobook.buddywisdom.cancellation.dto.request.CancelRequestDto;
 import cobook.buddywisdom.cancellation.dto.request.ConfirmCancelRequestDto;
 import cobook.buddywisdom.cancellation.dto.response.CancelRequestResponseDto;
 import cobook.buddywisdom.cancellation.service.CancelRequestService;
+import cobook.buddywisdom.cancellation.vo.DirectionType;
 import cobook.buddywisdom.util.WithMockCustomUser;
 
 @AutoConfigureMybatis
@@ -62,16 +65,17 @@ public class MenteeCancelRequestControllerTest {
 		@DisplayName("인증된 멘티의 보낸 취소 내역을 조회하기 위해 메서드를 호출하고 200 OK를 반환한다.")
 		void when_authenticatedMenteeExistsAndDirectionTypeIsSent_expect_callMethodAndReturn200Ok() throws Exception {
 			BDDMockito
-				.given(cancelRequestService.getCancelRequest(BDDMockito.anyLong(), BDDMockito.eq(DirectionType.SENT)))
+				.given(cancelRequestService.getCancelRequest(anyLong(), eq(DirectionType.SENT)))
 				.willReturn(List.of(cancelRequestResponseDto));
 
 			ResultActions response =
 				mockMvc.perform(
-					MockMvcRequestBuilders.get(BASE_URL + "/cancel-request/sent"))
+					MockMvcRequestBuilders.get(BASE_URL + "/cancel-request")
+						.param("direction", String.valueOf(DirectionType.SENT)))
 				.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(cancelRequestService)
-				.getCancelRequest(BDDMockito.anyLong(), BDDMockito.eq(DirectionType.SENT));
+				.getCancelRequest(anyLong(), eq(DirectionType.SENT));
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 
 		}
@@ -80,16 +84,17 @@ public class MenteeCancelRequestControllerTest {
 		@DisplayName("인증된 멘티의 받은 취소 내역을 조회하기 위해 메서드를 호출하고 200 OK를 반환한다.")
 		void when_authenticatedMenteeExistsAndDirectionTypeIsReceived_expect_callMethodAndReturn200Ok() throws Exception {
 			BDDMockito
-				.given(cancelRequestService.getCancelRequest(BDDMockito.anyLong(), BDDMockito.eq(DirectionType.RECEIVED)))
+				.given(cancelRequestService.getCancelRequest(anyLong(), eq(DirectionType.RECEIVED)))
 				.willReturn(List.of(cancelRequestResponseDto));
 
 			ResultActions response =
 				mockMvc.perform(
-						MockMvcRequestBuilders.get(BASE_URL + "/cancel-request/received"))
+						MockMvcRequestBuilders.get(BASE_URL + "/cancel-request")
+							.param("direction", String.valueOf(DirectionType.RECEIVED)))
 					.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(cancelRequestService)
-				.getCancelRequest(BDDMockito.anyLong(), BDDMockito.eq(DirectionType.RECEIVED));
+				.getCancelRequest(anyLong(), eq(DirectionType.RECEIVED));
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 	}
@@ -104,7 +109,7 @@ public class MenteeCancelRequestControllerTest {
 			CancelRequestDto cancelRequestDto = new CancelRequestDto(1L, "취소 사유");
 
 			BDDMockito
-				.given(cancelRequestService.saveCancelRequestByMentee(BDDMockito.anyLong(), BDDMockito.anyLong(), BDDMockito.anyString()))
+				.given(cancelRequestService.saveCancelRequestByMentee(anyLong(), anyLong(), anyString()))
 				.willReturn(cancelRequestResponseDto);
 
 			ResultActions response =
@@ -116,7 +121,7 @@ public class MenteeCancelRequestControllerTest {
 					.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(cancelRequestService)
-				.saveCancelRequestByMentee(BDDMockito.anyLong(), BDDMockito.anyLong(), BDDMockito.anyString());
+				.saveCancelRequestByMentee(anyLong(), anyLong(), anyString());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 
@@ -149,7 +154,7 @@ public class MenteeCancelRequestControllerTest {
 				new ConfirmCancelRequestDto(1L, 1L);
 
 			BDDMockito.willDoNothing()
-				.given(cancelRequestService).confirmCancelRequest(BDDMockito.anyLong(), BDDMockito.anyLong());
+				.given(cancelRequestService).confirmCancelRequest(anyLong(), anyLong());
 
 			ResultActions response =
 				mockMvc.perform(
@@ -160,7 +165,7 @@ public class MenteeCancelRequestControllerTest {
 					.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(cancelRequestService)
-				.confirmCancelRequest(BDDMockito.anyLong(), BDDMockito.anyLong());
+				.confirmCancelRequest(anyLong(), anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 
