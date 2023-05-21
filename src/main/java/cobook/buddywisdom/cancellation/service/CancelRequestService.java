@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cobook.buddywisdom.cancellation.controller.DirectionType;
+import cobook.buddywisdom.cancellation.vo.DirectionType;
 import cobook.buddywisdom.cancellation.domain.CancelRequest;
 import cobook.buddywisdom.cancellation.dto.response.CancelRequestResponseDto;
 import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
@@ -38,8 +38,7 @@ public class CancelRequestService {
 
 		if (direction.equals(DirectionType.SENT)) {
 			cancelRequestList = cancelRequestMapper.findBySenderId(memberId);
-		}
-		if (direction.equals(DirectionType.RECEIVED)) {
+		} else if (direction.equals(DirectionType.RECEIVED)) {
 			cancelRequestList = cancelRequestMapper.findByReceiverId(memberId);
 		}
 
