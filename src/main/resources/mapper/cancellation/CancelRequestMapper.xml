@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cobook.buddywisdom.cancellation.mapper.CancelRequestMapper">
+
+    <sql id="cancelRequestColumns">
+        id,
+        mentee_schedule_id,
+        sender_id,
+        receiver_id,
+        reason,
+        confirm_yn,
+        created_at,
+        updated_at
+    </sql>
+
+    <select id="findById" parameterType="map" resultType="CancelRequest">
+        SELECT
+            <include refid="cancelRequestColumns"></include>
+        FROM cancel_request
+        WHERE id = #{id}
+    </select>
+
+    <select id="findBySenderId" parameterType="long" resultType="CancelRequest">
+        SELECT
+            <include refid="cancelRequestColumns"></include>
+        FROM cancel_request
+        WHERE sender_id = #{senderId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="findByReceiverId" parameterType="long" resultType="CancelRequest">
+        SELECT
+            <include refid="cancelRequestColumns"></include>
+        FROM cancel_request
+        WHERE receiver_id = #{receiverId}
+        ORDER BY id DESC
+    </select>
+
+    <insert id="save" parameterType="CancelRequest">
+        INSERT INTO cancel_request(
+                                   mentee_schedule_id,
+                                   sender_id,
+                                   receiver_id,
+                                   reason,
+                                   created_at,
+                                   updated_at)
+        VALUES (
+                #{menteeScheduleId},
+                #{senderId},
+                #{receiverId},
+                #{reason},
+                NOW(),
+                NOW()
+                )
+        <selectKey keyProperty="id,createdAt,updatedAt" resultType="CancelRequest" order="AFTER">
+            SELECT id,
+                   created_at,
+                   updated_at
+            FROM cancel_request
+            WHERE mentee_schedule_id = #{menteeScheduleId}
+        </selectKey>
+    </insert>
+
+    <update id="updateConfirmYn" parameterType="map">
+        UPDATE cancel_request
+        SET confirm_yn = #{confirmYn},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>
