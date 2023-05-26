@@ -1,6 +1,8 @@
 package cobook.buddywisdom.mentee.controller;
 
 
+import static org.mockito.ArgumentMatchers.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -60,7 +62,7 @@ public class MenteeControllerTest {
 						.content(objectMapper.writeValueAsBytes(request)))
 				.andDo(MockMvcResultHandlers.print());
 
-			BDDMockito.verify(menteeScheduleService).getMenteeMonthlySchedule(BDDMockito.anyLong(), BDDMockito.any());
+			BDDMockito.verify(menteeScheduleService).getMenteeMonthlySchedule(anyLong(), BDDMockito.any());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 
@@ -94,7 +96,7 @@ public class MenteeControllerTest {
 					MockMvcRequestBuilders.get("/api/v1/mentees/schedule/" + scheduleId))
 				.andDo(MockMvcResultHandlers.print());
 
-			BDDMockito.verify(menteeScheduleService).getMenteeScheduleFeedback(BDDMockito.anyLong(), BDDMockito.anyLong());
+			BDDMockito.verify(menteeScheduleService).getMenteeScheduleFeedback(anyLong(), anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 	}
@@ -127,7 +129,7 @@ public class MenteeControllerTest {
 							.with(SecurityMockMvcRequestPostProcessors.csrf()))
 					.andDo(MockMvcResultHandlers.print());
 
-			BDDMockito.verify(menteeScheduleService).saveMenteeSchedule(BDDMockito.anyLong(), BDDMockito.anyLong());
+			BDDMockito.verify(menteeScheduleService).saveMenteeSchedule(anyLong(), anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 	}
@@ -135,7 +137,7 @@ public class MenteeControllerTest {
 	@Nested
 	@DisplayName("코칭 일정 변경")
 	@WithMockCustomUser(role = "MENTEE")
-	class UpdateScheduleTest {
+	class UpdateScheduleEventDetailsTest {
 
 		@Test
 		@DisplayName("스케줄 정보가 모두 전달되면 메서드를 호출하고 200 OK를 반환한다.")
@@ -143,7 +145,7 @@ public class MenteeControllerTest {
 			UpdateMenteeScheduleRequestDto request =
 				new UpdateMenteeScheduleRequestDto(1L, 2L);
 
-			BDDMockito.willDoNothing().given(menteeScheduleService).updateMenteeSchedule(BDDMockito.any());
+			BDDMockito.willDoNothing().given(menteeScheduleService).updateMenteeSchedule(anyLong(), anyLong(), anyLong());
 
 			ResultActions response =
 				mockMvc.perform(
@@ -153,7 +155,7 @@ public class MenteeControllerTest {
 							.with(SecurityMockMvcRequestPostProcessors.csrf()))
 					.andDo(MockMvcResultHandlers.print());
 
-			BDDMockito.verify(menteeScheduleService).updateMenteeSchedule(BDDMockito.any(UpdateMenteeScheduleRequestDto.class));
+			BDDMockito.verify(menteeScheduleService).updateMenteeSchedule(anyLong(), anyLong(), anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 
