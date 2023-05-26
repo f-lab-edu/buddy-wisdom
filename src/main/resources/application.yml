@@ -9,6 +9,12 @@ spring:
     username: ${{ secrets.DB_USERNAME }}
     password: ${{ secrets.DB_PASSWORD }}
 
+  rabbitmq:
+    host: ${{ secrets.MQ_HOST }}
+    port: ${{ secrets.MQ_PORT }}
+    username: ${{ secrets.MQ_USERNAME }}
+    password: ${{ secrets.MQ_PASSWORD }}
+
 # mybatis
 mybatis:
   configuration:
