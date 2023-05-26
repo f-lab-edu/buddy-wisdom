@@ -17,7 +17,7 @@ public class ScheduleEventManager {
 		this.messageUtil = messageUtil;
 	}
 
-	public ScheduleEventDto createByBaseSchedule(ScheduleEventDetails schedule, String template) {
+	public ScheduleEventDto createByScheduleDetails(ScheduleEventDetails schedule, String template) {
 		String convertedDateTime = messageUtil.convertToString(schedule.getScheduleDateTime());
 
 		String message = MessageFormat.format(template, convertedDateTime);
@@ -29,7 +29,7 @@ public class ScheduleEventManager {
 		);
 	}
 
-	public ScheduleEventDto createByUpdateSchedule(UpdateScheduleEventDetails updateScheduleEventDetails, String template) {
+	public ScheduleEventDto createByUpdateScheduleDetails(UpdateScheduleEventDetails updateScheduleEventDetails, String template) {
 		ScheduleEventDetails scheduleEventDetails = updateScheduleEventDetails.getScheduleEventDetails();
 		String current = messageUtil.convertToString(scheduleEventDetails.getScheduleDateTime());
 		String newSchedule = messageUtil.convertToString(updateScheduleEventDetails.getNewCoachingDateTime());

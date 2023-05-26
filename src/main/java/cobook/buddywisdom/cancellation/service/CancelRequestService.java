@@ -89,6 +89,7 @@ public class CancelRequestService {
 
 	private void produceCancelRequestEvent(long senderId, long receiverId, LocalDateTime localDateTime, String template) {
 		ScheduleEventDetails scheduleEventDetails = ScheduleEventDetails.of(senderId, receiverId, localDateTime);
-		feedMessageProducer.produceScheduleEvent(scheduleEventManager.createByBaseSchedule(scheduleEventDetails,template));
+		feedMessageProducer.produceScheduleEvent(
+			scheduleEventManager.createByScheduleDetails(scheduleEventDetails,template));
 	}
 }

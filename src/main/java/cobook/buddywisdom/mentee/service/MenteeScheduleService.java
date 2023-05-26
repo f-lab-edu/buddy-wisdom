@@ -97,7 +97,8 @@ public class MenteeScheduleService {
 
 		ScheduleEventDetails scheduleEventDetails =
 			ScheduleEventDetails.of(menteeId, coachSchedule.getCoachId(), coachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(scheduleEventManager.createByBaseSchedule(scheduleEventDetails, CREATE_SCHEDULE.getTemplate()));
+		feedMessageProducer.produceScheduleEvent(
+			scheduleEventManager.createByScheduleDetails(scheduleEventDetails, CREATE_SCHEDULE.getTemplate()));
 
 		return MenteeScheduleResponseDto.from(menteeSchedule);
 	}
@@ -125,7 +126,8 @@ public class MenteeScheduleService {
 
 		UpdateScheduleEventDetails updateScheduleEventDetails = UpdateScheduleEventDetails.of(menteeId, currentCoachSchedule.getCoachId(),
 			currentCoachSchedule.getPossibleDateTime(), newCoachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(scheduleEventManager.createByUpdateSchedule(updateScheduleEventDetails, UPDATE_SCHEDULE.getTemplate()));
+		feedMessageProducer.produceScheduleEvent(
+			scheduleEventManager.createByUpdateScheduleDetails(updateScheduleEventDetails, UPDATE_SCHEDULE.getTemplate()));
 	}
 
 	public CoachSchedule getScheduleIfUpdatePossible(long coachScheduleId) {
