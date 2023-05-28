@@ -9,7 +9,8 @@
         sender_id,
         receiver_id,
         feed_message,
-        created_at
+        created_at,
+        updated_at
     </sql>
 
     <insert id="save" parameterType="Feed">
@@ -20,6 +21,7 @@
         #{senderId},
         #{receiverId},
         #{feedMessage},
+        NOW(),
         NOW()
         )
     </insert>

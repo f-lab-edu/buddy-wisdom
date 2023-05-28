@@ -17,6 +17,6 @@ public class FeedService {
 
 	@Transactional
 	public void saveFeed(long senderId, long receiverId, String message) {
-		feedMapper.save(Feed.of(senderId, receiverId, message));
+		feedMapper.save(Feed.requestOf(senderId, receiverId, message));
 	}
 }
