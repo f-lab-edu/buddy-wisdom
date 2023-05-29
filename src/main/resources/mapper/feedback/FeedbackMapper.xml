@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cobook.buddywisdom.feedback.mapper.FeedbackMapper">
+
+    <select id="findByMenteeScheduleId" parameterType="long" resultType="Feedback">
+        SELECT
+            mentee_schedule_id,
+            coach_feedback,
+            mentee_feedback
+        FROM feedback
+        WHERE mentee_schedule_id = #{menteeScheduleId}
+    </select>
+
+    <update id="updateCoachFeedbackByMenteeScheduleId" parameterType="map">
+        UPDATE feedback
+        SET coach_feedback = #{feedback}
+        WHERE mentee_schedule_id = #{menteeScheduleId}
+    </update>
+
+    <update id="updateMenteeFeedbackByMenteeScheduleId" parameterType="map">
+        UPDATE feedback
+        SET mentee_feedback = #{feedback}
+        WHERE mentee_schedule_id = #{menteeScheduleId}
+    </update>
+
+</mapper>
