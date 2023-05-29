@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cobook.buddywisdom.auth.mapper.MemberMapper">
+<mapper namespace="cobook.buddywisdom.member.mapper.MemberMapper">
 
     <select id="findByEmailAndPassword" parameterType="String" resultType="AuthMember">
         SELECT
@@ -25,6 +25,22 @@
         FROM member m
         WHERE m.email = #{email}
           AND m.active_yn = 1
+    </select>
+
+    <select id="findById" parameterType="long" resultType="Member">
+        SELECT
+            id,
+            email,
+            password,
+            name,
+            nickname,
+            phone_number,
+            role,
+            active_yn,
+            created_at,
+            updated_at
+        FROM member
+        WHERE id = #{id}
     </select>
 
 </mapper>
