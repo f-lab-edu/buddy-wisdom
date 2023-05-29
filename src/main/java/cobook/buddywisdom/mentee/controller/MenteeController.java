@@ -63,7 +63,7 @@ public class MenteeController {
 
 	// 멘티 회원탈퇴
 	@PutMapping
-	public ResponseEntity<Integer> deleteCoachMember(@AuthenticationPrincipal CustomUserDetails member) {
+	public ResponseEntity<Integer> deleteMenteeMember(@AuthenticationPrincipal CustomUserDetails member) {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menteeService.deleteMentee(member.getId()));
 	}
 }
