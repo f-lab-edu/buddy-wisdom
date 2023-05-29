@@ -37,4 +37,8 @@ public class Feed {
 		feed.feedMessage = feedMessage;
 		return feed;
 	}
+
+	public void setFeedMessage(String convertedMessage) {
+		this.feedMessage = convertedMessage;
+	}
 }

@@ -6,16 +6,22 @@
 <mapper namespace="cobook.buddywisdom.feed.mapper.FeedMapper">
 
     <sql id="feedColumns">
+        id,
         sender_id,
         receiver_id,
         feed_message,
+        check_yn,
         created_at,
         updated_at
     </sql>
 
     <insert id="save" parameterType="Feed">
         INSERT INTO feed(
-            <include refid="feedColumns"></include>
+            sender_id,
+            receiver_id,
+            feed_message,
+            created_at,
+            updated_at
         )
         VALUES (
         #{senderId},
@@ -25,5 +31,42 @@
         NOW()
         )
     </insert>
+
+    <select id="findByIdAndReceiverId" parameterType="long" resultType="Feed">
+        SELECT
+            <include refid="feedColumns"></include>
+        FROM feed
+        WHERE id = #{id}
+            AND receiver_id = #{receiverId}
+    </select>
+
+    <select id="findAllByReceiverId" parameterType="long" resultType="Feed">
+        SELECT
+            <include refid="feedColumns"></include>
+        FROM feed
+        WHERE receiver_id = #{receiverId}
+    </select>
+
+    <select id="existsByReceiverIdAndCheckYn" parameterType="map" resultType="boolean">
+        SELECT EXISTS (
+                        SELECT 1
+                        FROM feed
+                        WHERE receiver_id = #{receiverId}
+                            AND check_yn = #{checkYn}
+                       )
+    </select>
+
+    <update id="updateCheckYnById" parameterType="map">
+        UPDATE feed
+        SET check_yn = #{checkYn}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCheckYnByReceiverIdAndCheckYn" parameterType="map">
+        UPDATE feed
+        SET check_yn = #{newStatus}
+        WHERE receiver_id = #{receiverId}
+            AND check_yn = #{currentStatus}
+    </update>
 
 </mapper>
