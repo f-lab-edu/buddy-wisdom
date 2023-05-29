@@ -24,7 +24,11 @@ public enum ErrorMessage {
 
 	// CANCEL_REQUEST
 	NOT_FOUND_CANCEL_REQUEST(HttpStatus.NOT_FOUND, "등록된 일정 취소 요청이 존재하지 않습니다."),
-	CONFIRMED_CANCEL_REQUEST(HttpStatus.BAD_REQUEST, "이미 확인이 완료된 취소 요청입니다.")
+	CONFIRMED_CANCEL_REQUEST(HttpStatus.BAD_REQUEST, "이미 확인이 완료된 취소 요청입니다."),
+
+	// FEED
+	NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "해당하는 피드가 존재하지 않습니다."),
+	ALREADY_CHECKED_FEED(HttpStatus.BAD_REQUEST, "이미 확인이 완료되었습니다.")
 	;
 
 	private HttpStatus status;
