@@ -26,6 +26,7 @@ public class CreateMemberDto {
     private String phone_number;
     @NotNull
     private RoleType role;
+    @Builder.Default
     private int active_yn = 1;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
