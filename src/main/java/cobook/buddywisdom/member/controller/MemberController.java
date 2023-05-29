@@ -1,6 +1,6 @@
 package cobook.buddywisdom.member.controller;
 
-import cobook.buddywisdom.coach.dto.CreateMemberDto;
+import cobook.buddywisdom.member.dto.CreateMemberDto;
 import cobook.buddywisdom.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

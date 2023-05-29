@@ -2,7 +2,7 @@ package cobook.buddywisdom.member.domain;
 
 
 import cobook.buddywisdom.global.security.domain.vo.RoleType;
-import cobook.buddywisdom.coach.dto.CreateMemberDto;
+import cobook.buddywisdom.member.dto.CreateMemberDto;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

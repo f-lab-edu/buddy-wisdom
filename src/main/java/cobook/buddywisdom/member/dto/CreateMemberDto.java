@@ -1,4 +1,4 @@
-package cobook.buddywisdom.coach.dto;
+package cobook.buddywisdom.member.dto;
 
 import cobook.buddywisdom.global.security.domain.vo.RoleType;
 import jakarta.annotation.Nullable;
@@ -40,7 +40,7 @@ public class CreateMemberDto {
                 .password(passwordEncoder)
                 .phone_number(dto.phone_number)
                 .role(dto.role)
-                .active_yn(1)
+                .active_yn(dto.active_yn)
                 .created_at(LocalDateTime.now())
                 .updated_at(LocalDateTime.now())
                 .build();
