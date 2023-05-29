@@ -44,8 +44,9 @@ public class MenteeCancelRequestController {
 	}
 
 	@PatchMapping(value = "/cancel-request")
-	public ResponseEntity<Void> updateCancelRequest(@RequestBody @Valid ConfirmCancelRequestDto request) {
-		cancelRequestService.confirmCancelRequest(request.id(), request.menteeScheduleId());
+	public ResponseEntity<Void> updateCancelRequest(@AuthenticationPrincipal CustomUserDetails member,
+													@RequestBody @Valid ConfirmCancelRequestDto request) {
+		cancelRequestService.confirmCancelRequest(member.getId(), request.id(), request.menteeScheduleId());
 		return ResponseEntity.ok().build();
 	}
 }

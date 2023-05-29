@@ -29,9 +29,11 @@ import cobook.buddywisdom.cancellation.mapper.CancelRequestMapper;
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
+import cobook.buddywisdom.global.util.ScheduleEventManager;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
+import cobook.buddywisdom.messaging.producer.FeedMessageProducer;
 
 @ExtendWith(MockitoExtension.class)
 public class CancelRequestServiceTest {
@@ -44,6 +46,12 @@ public class CancelRequestServiceTest {
 
 	@Mock
 	CoachScheduleService coachScheduleService;
+
+	@Mock
+	ScheduleEventManager scheduleEventManager;
+
+	@Mock
+	FeedMessageProducer feedMessageProducer;
 
 	@InjectMocks
 	CancelRequestService cancelRequestService;
@@ -180,14 +188,18 @@ public class CancelRequestServiceTest {
 		@Test
 		@DisplayName("취소 요청 및 일정 정보가 전달되면 상태 값을 변경하고 해당 스케줄을 삭제한다.")
 		void when_requestIdsArdValid_expect_updateConfirmYnAndDeleteSchedule() {
+			CoachSchedule coachSchedule = CoachSchedule.of(1L, 3L, LocalDateTime.now(), false);
+
 			BDDMockito.given(cancelRequestMapper.findById(anyLong()))
 				.willReturn(Optional.ofNullable(cancelRequest));
 			BDDMockito.willDoNothing().
 				given(cancelRequestMapper).updateConfirmYn(anyLong(), anyBoolean());
 			BDDMockito.willDoNothing()
 				.given(menteeScheduleService).deleteMenteeSchedule(anyLong());
+			BDDMockito.given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
+					.willReturn(coachSchedule);
 
-			cancelRequestService.confirmCancelRequest(1L, 1L);
+			cancelRequestService.confirmCancelRequest(1L, 1L, 1L);
 
 			BDDMockito.verify(cancelRequestMapper).findById(1L);
 			BDDMockito.verify(cancelRequestMapper).updateConfirmYn(1L, true);
@@ -201,7 +213,7 @@ public class CancelRequestServiceTest {
 				.willReturn(Optional.empty());
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
-					cancelRequestService.confirmCancelRequest(1L, 1L))
+					cancelRequestService.confirmCancelRequest(1L, 1L, 1L))
 				.isInstanceOf(NotFoundCancelRequestException.class);
 		}
 
@@ -215,7 +227,7 @@ public class CancelRequestServiceTest {
 				.willReturn(Optional.of(confirmedRequest));
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
-					cancelRequestService.confirmCancelRequest(1L, 1L))
+					cancelRequestService.confirmCancelRequest(1L, 1L, 1L))
 				.isInstanceOf(ConfirmedCancelRequestException.class);
 		}
 	}

@@ -154,7 +154,7 @@ public class MenteeCancelRequestControllerTest {
 				new ConfirmCancelRequestDto(1L, 1L);
 
 			BDDMockito.willDoNothing()
-				.given(cancelRequestService).confirmCancelRequest(anyLong(), anyLong());
+				.given(cancelRequestService).confirmCancelRequest(anyLong(), anyLong(), anyLong());
 
 			ResultActions response =
 				mockMvc.perform(
@@ -165,7 +165,7 @@ public class MenteeCancelRequestControllerTest {
 					.andDo(MockMvcResultHandlers.print());
 
 			BDDMockito.verify(cancelRequestService)
-				.confirmCancelRequest(anyLong(), anyLong());
+				.confirmCancelRequest(anyLong(), anyLong(), anyLong());
 			response.andExpect(MockMvcResultMatchers.status().isOk());
 		}
 

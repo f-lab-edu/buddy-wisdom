@@ -56,8 +56,9 @@ public class MenteeController {
 	}
 
 	@PatchMapping(value = "/schedule")
-	public ResponseEntity<Void> update(@RequestBody @Valid UpdateMenteeScheduleRequestDto request) {
-		menteeScheduleService.updateMenteeSchedule(request);
+	public ResponseEntity<Void> update(@AuthenticationPrincipal CustomUserDetails member,
+										@RequestBody @Valid UpdateMenteeScheduleRequestDto request) {
+		menteeScheduleService.updateMenteeSchedule(member.getId(), request.currentCoachingId(), request.newCoachingId());
 		return ResponseEntity.ok().build();
 	}
 }
