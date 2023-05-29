@@ -3,10 +3,10 @@ package cobook.buddywisdom.global.config;
 import cobook.buddywisdom.global.jwt.JwtAccessDeniedHandler;
 import cobook.buddywisdom.global.jwt.JwtAuthenticationEntryPoint;
 import cobook.buddywisdom.global.jwt.TokenProvider;
+import cobook.buddywisdom.global.redis.RedisService;
 import cobook.buddywisdom.global.security.CustomAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -32,7 +32,8 @@ public class SecurityConfig {
     private static final String PUBLIC_PATH = "/api/v1/public/**";
 
     public SecurityConfig(TokenProvider tokenProvider
-            , JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandler jwtAccessDeniedHandler, CustomAuthenticationProvider customAuthenticationProvider) {
+            , JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandler jwtAccessDeniedHandler
+            , CustomAuthenticationProvider customAuthenticationProvider) {
         this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;

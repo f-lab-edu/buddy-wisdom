@@ -2,15 +2,11 @@ package cobook.buddywisdom.mentee.controller;
 
 import java.util.List;
 
+import cobook.buddywisdom.mentee.service.MenteeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cobook.buddywisdom.global.security.CustomUserDetails;
 import cobook.buddywisdom.mentee.dto.request.UpdateMenteeScheduleRequestDto;
@@ -27,10 +23,13 @@ import jakarta.validation.Valid;
 public class MenteeController {
 
 	private final MenteeScheduleService menteeScheduleService;
+	private final MenteeService menteeService;
 
-	public MenteeController(MenteeScheduleService menteeScheduleService) {
+	public MenteeController(MenteeScheduleService menteeScheduleService, MenteeService menteeService) {
 		this.menteeScheduleService = menteeScheduleService;
+		this.menteeService = menteeService;
 	}
+
 
 	@GetMapping(value = "/schedule/monthly")
 	public ResponseEntity<List<MenteeMonthlyScheduleResponseDto>> getMenteeMonthlySchedule(@AuthenticationPrincipal CustomUserDetails member,
@@ -60,5 +59,11 @@ public class MenteeController {
 										@RequestBody @Valid UpdateMenteeScheduleRequestDto request) {
 		menteeScheduleService.updateMenteeSchedule(member.getId(), request.currentCoachingId(), request.newCoachingId());
 		return ResponseEntity.ok().build();
+	}
+
+	// 멘티 회원탈퇴
+	@PutMapping
+	public ResponseEntity<Integer> deleteCoachMember(@AuthenticationPrincipal CustomUserDetails member) {
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menteeService.deleteMentee(member.getId()));
 	}
 }

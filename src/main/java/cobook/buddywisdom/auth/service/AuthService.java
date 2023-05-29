@@ -6,8 +6,8 @@ import cobook.buddywisdom.global.exception.InvalidCredentialsException;
 import cobook.buddywisdom.global.jwt.TokenDto;
 import cobook.buddywisdom.global.jwt.TokenProvider;
 import cobook.buddywisdom.global.security.CustomUserDetails;
-import cobook.buddywisdom.auth.mapper.MemberMapper;
-import cobook.buddywisdom.global.exception.NotFoundMemberException;
+import cobook.buddywisdom.auth.mapper.AuthMapper;
+import cobook.buddywisdom.member.exception.NotFoundMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,35 +17,47 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final MemberMapper memberMapper;
+    private final AuthMapper authMapper;
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
-//    private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = true)
-    public TokenDto login(final String email, final String password) {
+    @Transactional
+    public TokenDto login(final String email, final String password) throws NoSuchAlgorithmException {
 
-        AuthMember user = memberMapper.findByEmailAndPassword(email, password)
+        // 비밀번호 암호화
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hexString = new StringBuilder();
+        // 해시된 바이트 배열을 16진수 문자열로 변환하는 과정
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        String encryptPassword = hexString.toString();
+
+        // 회원이 존재하는지 체크
+        authMapper.findByEmail(email)
                 .orElseThrow(() -> new NotFoundMemberException(ErrorMessage.NOT_FOUND_MEMBER));
 
-//         == 비밀번호 암호화 로직 들어갈 부분 ==
-//         String encryptPassword = passwordEncoder.encode(password);
-//         ==
+        // 회원이 맞는지 체크
+        AuthMember userCheck = authMapper.findByEmailAndPassword(email, encryptPassword)
+                .orElseThrow(() -> new InvalidCredentialsException(ErrorMessage.INVALID_CREDENTIALS_EXCEPTION));
 
-        if(!password.equals(user.getPassword())) {
-            throw new InvalidCredentialsException(ErrorMessage.INVALID_CREDENTIALS_EXCEPTION);
-        }
-
-        CustomUserDetails userDetails = CustomUserDetails.of(user);
+        CustomUserDetails userDetails = CustomUserDetails.of(userCheck);
 
         UsernamePasswordAuthenticationToken token
-                = new UsernamePasswordAuthenticationToken(userDetails, password);
+                = new UsernamePasswordAuthenticationToken(userDetails, encryptPassword);
 
         Authentication authenticate = managerBuilder.getObject().authenticate(token);
         // 스레드가 실행되는 동안 인증 상태를 유지하도록 저장
@@ -53,4 +65,5 @@ public class AuthService {
 
         return tokenProvider.createToken(authenticate);
     }
+
 }

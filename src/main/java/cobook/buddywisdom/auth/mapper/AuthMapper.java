@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 @Mapper
-public interface MemberMapper {
+public interface AuthMapper {
 
     Optional<AuthMember> findByEmailAndPassword(final String email, final String password);
     Optional<AuthMember> findByEmail(final String username);
