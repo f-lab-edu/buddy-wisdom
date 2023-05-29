@@ -3,7 +3,6 @@ package cobook.buddywisdom.global.config;
 import cobook.buddywisdom.global.jwt.JwtAccessDeniedHandler;
 import cobook.buddywisdom.global.jwt.JwtAuthenticationEntryPoint;
 import cobook.buddywisdom.global.jwt.TokenProvider;
-import cobook.buddywisdom.global.redis.RedisService;
 import cobook.buddywisdom.global.security.CustomAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -31,10 +31,4 @@
             );
     </insert>
 
-    <select id="getRoleType" parameterType="long" resultType="String">
-        SELECT m.role
-        FROM member m
-        WHERE m.id = #{id}
-          AND m.active_yn = 1
-    </select>
 </mapper>
