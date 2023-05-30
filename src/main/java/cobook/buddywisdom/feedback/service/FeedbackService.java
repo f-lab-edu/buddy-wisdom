@@ -6,13 +6,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import cobook.buddywisdom.feedback.domain.Feedback;
 import cobook.buddywisdom.feedback.dto.FeedbackResponseDto;
 import cobook.buddywisdom.feedback.exception.NotFoundFeedbackException;
 import cobook.buddywisdom.feedback.mapper.FeedbackMapper;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.global.vo.MemberApiType;
-import cobook.buddywisdom.mentee.service.MenteeScheduleService;
 
 @Service
 public class FeedbackService {
