@@ -36,6 +36,6 @@ public class FeedbackController {
 	public ResponseEntity<Void> updateFeedback(@PathVariable final MemberApiType memberApiType,
 												@RequestBody @Valid final UpdateFeedbackRequestDto request) {
 		feedbackService.updateFeedback(request.menteeScheduleId(), request.feedback(), memberApiType);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 }
