@@ -146,12 +146,12 @@ public class FeedServiceTest {
 			BDDMockito.given(feedMapper.findByIdAndReceiverId(anyLong(), anyLong()))
 				.willReturn(Optional.of(feed));
 			BDDMockito.willDoNothing()
-				.given(feedMapper).updateCheckYnById(anyLong(), anyBoolean());
+				.given(feedMapper).updateCheckYnById(anyLong());
 
 			feedService.updateUncheckedFeed(4L, 1L);
 
 			BDDMockito.verify(feedMapper).findByIdAndReceiverId(anyLong(), anyLong());
-			BDDMockito.verify(feedMapper).updateCheckYnById(anyLong(), anyBoolean());
+			BDDMockito.verify(feedMapper).updateCheckYnById(anyLong());
 		}
 
 		@Test
@@ -185,12 +185,12 @@ public class FeedServiceTest {
 			BDDMockito.given(feedMapper.existsByReceiverIdAndCheckYn(anyLong(), anyBoolean()))
 				.willReturn(true);
 			BDDMockito.willDoNothing()
-				.given(feedMapper).updateCheckYnByReceiverIdAndCheckYn(anyLong(), anyBoolean(), anyBoolean());
+				.given(feedMapper).updateCheckYnByReceiverIdAndCheckYn(anyLong());
 
 			feedService.updateAllUncheckedFeed(4L);
 
 			Assertions.assertTrue(feedMapper.existsByReceiverIdAndCheckYn(4L, false));
-			BDDMockito.verify(feedMapper).updateCheckYnByReceiverIdAndCheckYn(anyLong(), anyBoolean(), anyBoolean());
+			BDDMockito.verify(feedMapper).updateCheckYnByReceiverIdAndCheckYn(anyLong());
 		}
 
 		@Test
