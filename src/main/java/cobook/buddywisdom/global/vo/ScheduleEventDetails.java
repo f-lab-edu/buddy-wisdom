@@ -1,7 +1,5 @@
 package cobook.buddywisdom.global.vo;
 
-import java.time.LocalDateTime;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +10,13 @@ public class ScheduleEventDetails {
 
 	private Long senderId;
 	private Long receiverId;
-	private LocalDateTime scheduleDateTime;
+	private String template;
 
-	public static ScheduleEventDetails of(Long senderId, Long receiverId, LocalDateTime scheduleDateTime) {
+	public static ScheduleEventDetails of(Long senderId, Long receiverId, String template) {
 		ScheduleEventDetails scheduleEventDetails = new ScheduleEventDetails();
 		scheduleEventDetails.senderId = senderId;
 		scheduleEventDetails.receiverId = receiverId;
-		scheduleEventDetails.scheduleDateTime = scheduleDateTime;
+		scheduleEventDetails.template = template;
 		return scheduleEventDetails;
 	}
 

@@ -1,12 +1,12 @@
 package cobook.buddywisdom.global.util;
 
-import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import org.springframework.stereotype.Component;
 
 import cobook.buddywisdom.global.vo.ScheduleEventDetails;
 import cobook.buddywisdom.feed.dto.ScheduleEventDto;
-import cobook.buddywisdom.global.vo.UpdateScheduleEventDetails;
 
 @Component
 public class ScheduleEventManager {
@@ -17,29 +17,16 @@ public class ScheduleEventManager {
 		this.messageUtil = messageUtil;
 	}
 
-	public ScheduleEventDto createByScheduleDetails(ScheduleEventDetails schedule, String template) {
-		String convertedDateTime = messageUtil.convertToString(schedule.getScheduleDateTime());
-
-		String message = MessageFormat.format(template, convertedDateTime);
-
-		return new ScheduleEventDto(
-			schedule.getSenderId(),
-			schedule.getReceiverId(),
-			message
-		);
-	}
-
-	public ScheduleEventDto createByUpdateScheduleDetails(UpdateScheduleEventDetails updateScheduleEventDetails, String template) {
-		ScheduleEventDetails scheduleEventDetails = updateScheduleEventDetails.getScheduleEventDetails();
-		String current = messageUtil.convertToString(scheduleEventDetails.getScheduleDateTime());
-		String newSchedule = messageUtil.convertToString(updateScheduleEventDetails.getNewCoachingDateTime());
-
-		String message = MessageFormat.format(template, current, newSchedule);
+	public ScheduleEventDto createByScheduleDetails(ScheduleEventDetails eventDetails, MessageFormatter messageFormatter,
+													LocalDateTime ...args) {
+		String[] convertedDateTime = Arrays.stream(args)
+			.map(messageUtil::convertToString)
+			.toArray(String[]::new);
 
 		return new ScheduleEventDto(
-			scheduleEventDetails.getSenderId(),
-			scheduleEventDetails.getReceiverId(),
-			message
+			eventDetails.getSenderId(),
+			eventDetails.getReceiverId(),
+			messageFormatter.format(eventDetails.getTemplate(), convertedDateTime)
 		);
 	}
 }
