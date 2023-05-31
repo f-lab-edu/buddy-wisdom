@@ -5,7 +5,6 @@ import static cobook.buddywisdom.global.vo.MessageTemplate.*;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +41,16 @@ public class FeedService {
 			return Collections.emptyList();
 		}
 
-		feedList.forEach(s -> s.setFeedMessage(getConvertedMessage(s.getFeedMessage(), s.getSenderId())));
+		feedList.forEach(this::updateFeedMessage);
 
 		return feedList.stream()
 			.map(FeedResponseDto::from)
-			.collect(Collectors.toUnmodifiableList());
+			.toList();
+	}
+
+	private void updateFeedMessage(Feed feed) {
+		String convertedMessage = getConvertedMessage(feed.getFeedMessage(), feed.getSenderId());
+		feed.setFeedMessage(convertedMessage);
 	}
 
 	public String getConvertedMessage(String message, long senderId) {
@@ -77,14 +81,14 @@ public class FeedService {
 			throw new AlreadyCheckedFeedException(ErrorMessage.ALREADY_CHECKED_FEED);
 		}
 
-		feedMapper.updateCheckYnById(id, true);
+		feedMapper.updateCheckYnById(id);
 	}
 
 	public void updateAllUncheckedFeed(long memberId) {
 		if (!existsFeed(memberId, false)) {
 			throw new AlreadyCheckedFeedException(ErrorMessage.ALREADY_CHECKED_FEED);
 		}
-		feedMapper.updateCheckYnByReceiverIdAndCheckYn(memberId, false, true);
+		feedMapper.updateCheckYnByReceiverIdAndCheckYn(memberId);
 	}
 
 	public boolean existsFeed(long memberId, boolean checkYn) {

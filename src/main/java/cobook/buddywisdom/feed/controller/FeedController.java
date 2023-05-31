@@ -1,7 +1,6 @@
 package cobook.buddywisdom.feed.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +26,7 @@ public class FeedController {
 
 	@GetMapping
 	public ResponseEntity<List<FeedResponseDto>> getAllFeed(@AuthenticationPrincipal CustomUserDetails member) {
-		return ResponseEntity.of(Optional.ofNullable(feedService.getAllFeedByReceiverId(member.getId())));
+		return ResponseEntity.ok(feedService.getAllFeedByReceiverId(member.getId()));
 	}
 
 	@PatchMapping("/{feedId}")

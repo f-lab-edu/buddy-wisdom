@@ -12,7 +12,7 @@ public interface FeedMapper {
 	List<Feed> findAllByReceiverId(long receiverId);
 	Optional<Feed> findByIdAndReceiverId(long id, long receiverId);
 	void save(Feed feed);
-	void updateCheckYnById(long id, boolean checkYn);
-	void updateCheckYnByReceiverIdAndCheckYn(long receiverId, boolean currentStatus, boolean newStatus);
+	void updateCheckYnById(long id);
+	void updateCheckYnByReceiverIdAndCheckYn(long receiverId);
 	boolean existsByReceiverIdAndCheckYn(long receiverId, boolean checkYn);
 }

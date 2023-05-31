@@ -58,15 +58,15 @@
 
     <update id="updateCheckYnById" parameterType="map">
         UPDATE feed
-        SET check_yn = #{checkYn}
+        SET check_yn = true
         WHERE id = #{id}
     </update>
 
     <update id="updateCheckYnByReceiverIdAndCheckYn" parameterType="map">
         UPDATE feed
-        SET check_yn = #{newStatus}
+        SET check_yn = true
         WHERE receiver_id = #{receiverId}
-            AND check_yn = #{currentStatus}
+            AND check_yn = false
     </update>
 
 </mapper>
