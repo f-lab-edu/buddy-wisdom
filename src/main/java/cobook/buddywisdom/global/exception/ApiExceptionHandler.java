@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
 import cobook.buddywisdom.cancellation.exception.NotFoundCancelRequestException;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
+import cobook.buddywisdom.feedback.exception.NotFoundFeedbackException;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotAllowedUpdateException;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
@@ -73,5 +74,11 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleConfirmedCancelRequestException(ConfirmedCancelRequestException exception) {
 		log.error("ConfirmedCancelRequestException : ", exception);
 		return ErrorResponse.toResponseEntity(ErrorMessage.CONFIRMED_CANCEL_REQUEST);
+	}
+
+	@ExceptionHandler(NotFoundFeedbackException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundFeedbackException(NotFoundFeedbackException exception) {
+		log.error("NotFoundFeedbackException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_FEEDBACK);
 	}
 }
