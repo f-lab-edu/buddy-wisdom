@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import cobook.buddywisdom.mentee.service.MenteeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,9 @@ public class MenteeControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@MockBean
+	private MenteeService menteeService;
 
 	@Nested
 	@DisplayName("월별 스케줄 조회")
