@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
 import cobook.buddywisdom.cancellation.exception.NotFoundCancelRequestException;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
+import cobook.buddywisdom.feed.exception.AlreadyCheckedFeedException;
+import cobook.buddywisdom.feed.exception.NotFoundFeedException;
+import cobook.buddywisdom.member.exception.NotFoundMemberException;
 import cobook.buddywisdom.feedback.exception.NotFoundFeedbackException;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotAllowedUpdateException;
@@ -74,6 +77,24 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleConfirmedCancelRequestException(ConfirmedCancelRequestException exception) {
 		log.error("ConfirmedCancelRequestException : ", exception);
 		return ErrorResponse.toResponseEntity(ErrorMessage.CONFIRMED_CANCEL_REQUEST);
+	}
+
+	@ExceptionHandler(NotFoundFeedException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundFeedException(NotFoundFeedException exception) {
+		log.error("NotFoundFeedException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_FEED);
+	}
+
+	@ExceptionHandler(AlreadyCheckedFeedException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyCheckedFeedException(AlreadyCheckedFeedException exception) {
+		log.error("AlreadyCheckedFeedException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.ALREADY_CHECKED_FEED);
+	}
+
+	@ExceptionHandler(NotFoundMemberException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundMemberException(NotFoundMemberException exception) {
+		log.error("NotFoundMemberException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MEMBER);
 	}
 
 	@ExceptionHandler(NotFoundFeedbackException.class)
