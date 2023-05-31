@@ -29,11 +29,9 @@ import cobook.buddywisdom.cancellation.mapper.CancelRequestMapper;
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
-import cobook.buddywisdom.global.util.ScheduleEventManager;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
-import cobook.buddywisdom.messaging.producer.FeedMessageProducer;
 
 @ExtendWith(MockitoExtension.class)
 public class CancelRequestServiceTest {
@@ -48,10 +46,7 @@ public class CancelRequestServiceTest {
 	CoachScheduleService coachScheduleService;
 
 	@Mock
-	ScheduleEventManager scheduleEventManager;
-
-	@Mock
-	FeedMessageProducer feedMessageProducer;
+	CancelRequestEventService cancelRequestEventService;
 
 	@InjectMocks
 	CancelRequestService cancelRequestService;
