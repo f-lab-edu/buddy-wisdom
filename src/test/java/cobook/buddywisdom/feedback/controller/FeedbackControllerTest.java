@@ -95,26 +95,26 @@ public class FeedbackControllerTest {
 			BDDMockito.verify(feedbackService).updateFeedbackByMentee(anyLong(), anyString());
 			response.andExpect(MockMvcResultMatchers.status().isNoContent());
 		}
-	}
 
-	@Test
-	@DisplayName("유효한 코치의 피드백 정보가 전달되면 메서드를 호출하고 200 OK를 반환한다.")
-	void when_coachRequestInformationIsValid_expect_callMethodAndReturn200Ok() throws Exception {
-		UpdateFeedbackRequestDto request = new UpdateFeedbackRequestDto(1L, "코치 피드백");
+		@Test
+		@DisplayName("유효한 코치의 피드백 정보가 전달되면 메서드를 호출하고 200 OK를 반환한다.")
+		void when_coachRequestInformationIsValid_expect_callMethodAndReturn200Ok() throws Exception {
+			UpdateFeedbackRequestDto request = new UpdateFeedbackRequestDto(1L, "코치 피드백");
 
-		BDDMockito.willDoNothing()
-			.given(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
+			BDDMockito.willDoNothing()
+				.given(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
 
-		ResultActions response =
-			mockMvc.perform(
-					MockMvcRequestBuilders.patch(BASE_URL + COACHES + "/feedback")
-						.with(SecurityMockMvcRequestPostProcessors.csrf())
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(request)))
-				.andDo(MockMvcResultHandlers.print());
+			ResultActions response =
+				mockMvc.perform(
+						MockMvcRequestBuilders.patch(BASE_URL + COACHES + "/feedback")
+							.with(SecurityMockMvcRequestPostProcessors.csrf())
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(request)))
+					.andDo(MockMvcResultHandlers.print());
 
-		BDDMockito.verify(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
-		response.andExpect(MockMvcResultMatchers.status().isNoContent());
+			BDDMockito.verify(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
+			response.andExpect(MockMvcResultMatchers.status().isNoContent());
+		}
 	}
 }
 
