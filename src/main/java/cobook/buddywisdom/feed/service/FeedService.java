@@ -63,7 +63,7 @@ public class FeedService {
 		}
 
 		String combinedName =
-			MessageFormat.format(COMBINED_NAME.getTemplate(), member.getName(), nickname);
+			MessageFormat.format(COMBINED_NAME, member.getName(), nickname);
 
 		return String.format(message, combinedName);
 	}
