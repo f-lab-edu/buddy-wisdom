@@ -15,6 +15,7 @@ import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.feed.exception.AlreadyCheckedFeedException;
 import cobook.buddywisdom.feed.exception.NotFoundFeedException;
 import cobook.buddywisdom.member.exception.NotFoundMemberException;
+import cobook.buddywisdom.feedback.exception.NotFoundFeedbackException;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
 import cobook.buddywisdom.mentee.exception.NotAllowedUpdateException;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
@@ -96,4 +97,9 @@ public class ApiExceptionHandler {
 		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_MEMBER);
 	}
 
+	@ExceptionHandler(NotFoundFeedbackException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundFeedbackException(NotFoundFeedbackException exception) {
+		log.error("NotFoundFeedbackException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_FEEDBACK);
+	}
 }
