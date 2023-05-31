@@ -35,7 +35,12 @@ public class FeedbackController {
 	@PatchMapping("/{memberApiType}/feedback")
 	public ResponseEntity<Void> updateFeedback(@PathVariable final MemberApiType memberApiType,
 												@RequestBody @Valid final UpdateFeedbackRequestDto request) {
-		feedbackService.updateFeedback(request.menteeScheduleId(), request.feedback(), memberApiType);
+		if (MemberApiType.COACHES.equals(memberApiType)) {
+			feedbackService.updateFeedbackByCoach(request.menteeScheduleId(), request.feedback());
+		} else if (MemberApiType.MENTEES.equals(memberApiType)) {
+			feedbackService.updateFeedbackByMentee(request.menteeScheduleId(), request.feedback());
+		}
+
 		return ResponseEntity.noContent().build();
 	}
 }

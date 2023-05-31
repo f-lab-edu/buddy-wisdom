@@ -1,7 +1,5 @@
 package cobook.buddywisdom.feedback.service;
 
-import static cobook.buddywisdom.global.vo.MemberApiType.*;
-
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ import cobook.buddywisdom.feedback.dto.FeedbackResponseDto;
 import cobook.buddywisdom.feedback.exception.NotFoundFeedbackException;
 import cobook.buddywisdom.feedback.mapper.FeedbackMapper;
 import cobook.buddywisdom.global.exception.ErrorMessage;
-import cobook.buddywisdom.global.vo.MemberApiType;
 
 @Service
 public class FeedbackService {
@@ -26,14 +23,18 @@ public class FeedbackService {
 			.map(FeedbackResponseDto::from);
 	}
 
-	public void updateFeedback(long menteeScheduleId, String feedback, MemberApiType apiType) {
+	public void updateFeedbackByCoach(long menteeScheduleId, String feedback) {
 		feedbackMapper.findByMenteeScheduleId(menteeScheduleId)
 			.orElseThrow(() -> new NotFoundFeedbackException(ErrorMessage.NOT_FOUND_FEEDBACK));
 
-		if (COACHES.equals(apiType)) {
-			feedbackMapper.updateCoachFeedbackByMenteeScheduleId(menteeScheduleId, feedback);
-		} else if (MENTEES.equals(apiType)) {
-			feedbackMapper.updateMenteeFeedbackByMenteeScheduleId(menteeScheduleId, feedback);
-		}
+		feedbackMapper.updateCoachFeedbackByMenteeScheduleId(menteeScheduleId, feedback);
+	}
+
+	public void updateFeedbackByMentee(long menteeScheduleId, String feedback) {
+		feedbackMapper.findByMenteeScheduleId(menteeScheduleId)
+			.orElseThrow(() -> new NotFoundFeedbackException(ErrorMessage.NOT_FOUND_FEEDBACK));
+
+		feedbackMapper.updateMenteeFeedbackByMenteeScheduleId(menteeScheduleId, feedback);
+
 	}
 }
