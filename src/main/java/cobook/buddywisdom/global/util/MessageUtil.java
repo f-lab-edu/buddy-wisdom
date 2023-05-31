@@ -1,5 +1,7 @@
 package cobook.buddywisdom.global.util;
 
+import static cobook.buddywisdom.global.vo.MessageTemplate.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -8,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageUtil {
 
-	public String convertToString(LocalDateTime scheduleDateTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+	public String convertToString(LocalDateTime localDateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
 
-		return scheduleDateTime.format(formatter);
+		return localDateTime.format(formatter);
 	}
 }
