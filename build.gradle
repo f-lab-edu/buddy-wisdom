@@ -1,3 +1,13 @@
+// gradle 에서 yml 을 읽어오기 위한 설정
+import org.yaml.snakeyaml.Yaml
+// compile time 이 아닌 runtime 시에 동작하므로 buildscript 에 의존성 추가
+// Gradle 초기 설정 단계에서 클래스 경로가 설정되어야 하므로 buildscript 블록은 스크립트 파일의 상단에 위치
+buildscript {
+    dependencies {
+        classpath 'org.yaml:snakeyaml:1.28'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
@@ -11,7 +21,7 @@ jacoco {
     toolVersion = '0.8.8'
 
 //  테스트결과 리포트를 저장할 경로 변경
-//  default는 "$/jacoco"
+//  default 는 "$/jacoco"
 //  reportsDir = file("$buildDir/customJacocoReportDir")
 }
 
@@ -23,7 +33,7 @@ jacocoTestReport {
         csv.enabled false
 
 //  각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있습니다.
-  html.destination file("$buildDir/jacocoHtml")
+        html.destination file("$buildDir/jacocoHtml")
 //  xml.destination file("$buildDir/jacoco.xml")
     }
 }
@@ -64,6 +74,15 @@ repositories {
     mavenCentral()
 }
 
+// submodule
+sourceSets {
+    main {
+        java {
+            srcDir 'buddy-wisdom-private'
+        }
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // spring security
@@ -91,11 +110,24 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
+    // snake yaml
+    implementation 'org.yaml:snakeyaml:1.28'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.1'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
+}
+
+// gradle 에서 submodule 의 yml 을 읽어오기 위한 설정
+task readYamlFile {
+    doLast {
+        File file = new File('buddy-wisdom-private/application.yml')
+        Yaml yaml = new Yaml()
+        def config = yaml.load(file.text)
+        println config
+    }
 }
 
 tasks.named('test') {
