@@ -1,10 +1,12 @@
 // gradle 에서 yml 을 읽어오기 위한 설정
-import org.yaml.snakeyaml.Yaml
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 // compile time 이 아닌 runtime 시에 동작하므로 buildscript 에 의존성 추가
 // Gradle 초기 설정 단계에서 클래스 경로가 설정되어야 하므로 buildscript 블록은 스크립트 파일의 상단에 위치
 buildscript {
     dependencies {
-        classpath 'org.yaml:snakeyaml:1.28'
+        classpath 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+        classpath 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
     }
 }
 
@@ -110,8 +112,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
-    // snake yaml
-    implementation 'org.yaml:snakeyaml:1.28'
+    // Jackson yaml
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -121,11 +124,11 @@ dependencies {
 }
 
 // gradle 에서 submodule 의 yml 을 읽어오기 위한 설정
-task readYamlFile {
+tasks.register('readYamlFile') {
     doLast {
         File file = new File('buddy-wisdom-private/application.yml')
-        Yaml yaml = new Yaml()
-        def config = yaml.load(file.text)
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
+        def config = mapper.readValue(file, Map.class)
         println config
     }
 }
