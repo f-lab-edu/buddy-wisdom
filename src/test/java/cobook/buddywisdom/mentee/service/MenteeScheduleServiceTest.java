@@ -22,12 +22,10 @@ import cobook.buddywisdom.relationship.exception.NotFoundRelationshipException;
 import cobook.buddywisdom.relationship.service.CoachingRelationshipService;
 import cobook.buddywisdom.util.WithMockCustomUser;
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,6 +34,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MenteeScheduleServiceTest {
@@ -67,27 +76,26 @@ public class MenteeScheduleServiceTest {
 		void when_scheduleExistsWithInformation_expect_returnResponseList() {
 			MenteeMonthlySchedule menteeMonthlySchedule = MenteeMonthlySchedule.of( SCHEDULE_ID, LocalDateTime.now());
 
-			BDDMockito.given(menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
+			given(menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(anyLong(), any(), any()))
 				.willReturn(List.of(menteeMonthlySchedule));
 
 			List<MenteeMonthlyScheduleResponseDto> expectedResponse =
 				menteeScheduleService.getMenteeMonthlySchedule(MENTEE_ID, getMenteeMonthlyScheduleRequest());
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(1, expectedResponse.size());
+			assertNotNull(expectedResponse);
+			assertEquals(1, expectedResponse.size());
 		}
 
 		@Test
 		@DisplayName("해당하는 스케줄 정보가 존재하지 않으면 빈 배열을 반환한다.")
 		void when_scheduleDoesNotExistsWithInformation_expect_returnEmptyArray() {
-			BDDMockito
-				.given(menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
+			given(menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(anyLong(), any(), any()))
 				.willReturn(null);
 
 			List<MenteeMonthlyScheduleResponseDto> expectedResponse =
 				menteeScheduleService.getMenteeMonthlySchedule(MENTEE_ID, getMenteeMonthlyScheduleRequest());
 
-			Assertions.assertTrue(expectedResponse.isEmpty());
+			assertTrue(expectedResponse.isEmpty());
 		}
 
 	}
@@ -101,23 +109,23 @@ public class MenteeScheduleServiceTest {
 			MenteeScheduleFeedback menteeScheduleFeedback =
 				MenteeScheduleFeedback.of(SCHEDULE_ID, 1L, "코치 피드백", "멘티 피드백", LocalDateTime.now());
 
-			BDDMockito.given(menteeScheduleMapper.findWithFeedbackByMenteeIdAndCoachingScheduleId(BDDMockito.anyLong(), BDDMockito.anyLong()))
+			given(menteeScheduleMapper.findWithFeedbackByMenteeIdAndCoachingScheduleId(anyLong(), anyLong()))
 				.willReturn(Optional.of(menteeScheduleFeedback));
 
 			MenteeScheduleFeedbackResponseDto expectedResponse =
 				menteeScheduleService.getMenteeScheduleFeedback(MENTEE_ID, SCHEDULE_ID);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(menteeScheduleFeedback.getCoachingScheduleId(), expectedResponse.coachingScheduleId());
+			assertNotNull(expectedResponse);
+			assertEquals(menteeScheduleFeedback.getCoachingScheduleId(), expectedResponse.coachingScheduleId());
 		}
 
 		@Test
 		@DisplayName("해당하는 스케줄 정보가 존재하지 않으면 NotFoundMenteeScheduleException이 발생한다.")
 		void when_scheduleDoesNotExists_expect_throwsNotFoundMenteeScheduleException() {
-			BDDMockito.given(menteeScheduleMapper.findWithFeedbackByMenteeIdAndCoachingScheduleId(BDDMockito.anyLong(), BDDMockito.anyLong()))
+			given(menteeScheduleMapper.findWithFeedbackByMenteeIdAndCoachingScheduleId(anyLong(), anyLong()))
 				.willThrow(NotFoundMenteeScheduleException.class);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.getMenteeScheduleFeedback(MENTEE_ID, SCHEDULE_ID))
 			.isInstanceOf(NotFoundMenteeScheduleException.class);
 		}
@@ -134,25 +142,25 @@ public class MenteeScheduleServiceTest {
 				CoachingRelationship.of(COACH_ID, MENTEE_ID, true, LocalDateTime.now(), LocalDateTime.now().plusMonths(2));
 			CoachSchedule coachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now(), false);
 
-			BDDMockito.given(coachingRelationshipService.getCoachingRelationshipByMenteeId(BDDMockito.anyLong()))
+			given(coachingRelationshipService.getCoachingRelationshipByMenteeId(anyLong()))
 					.willReturn(coachingRelationship);
-			BDDMockito.given(coachScheduleService.getAllCoachingSchedule(BDDMockito.anyLong()))
+			given(coachScheduleService.getAllCoachingSchedule(anyLong()))
 					.willReturn(List.of(coachSchedule));
 
 			List<MyCoachScheduleResponseDto> expectedResponse =
 				menteeScheduleService.getMyCoachSchedule(MENTEE_ID);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(1, expectedResponse.size());
+			assertNotNull(expectedResponse);
+			assertEquals(1, expectedResponse.size());
 		}
 
 		@Test
 		@DisplayName("매칭된 코치 정보가 존재하지 않으면 NotFoundRelationshipException이 발생한다..")
 		void when_matchingInformationNotExists_expect_throwsNotFoundRelationshipException() {
-			BDDMockito.given(coachingRelationshipService.getCoachingRelationshipByMenteeId(BDDMockito.anyLong()))
+			given(coachingRelationshipService.getCoachingRelationshipByMenteeId(anyLong()))
 				.willThrow(NotFoundRelationshipException.class);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.getMyCoachSchedule(MENTEE_ID))
 				.isInstanceOf(NotFoundRelationshipException.class);
 		}
@@ -163,17 +171,17 @@ public class MenteeScheduleServiceTest {
 			MenteeSchedule menteeSchedule = MenteeSchedule.of(SCHEDULE_ID, MENTEE_ID);
 			CoachSchedule coachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now(), false);
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 					.willReturn(coachSchedule);
-			BDDMockito.willDoNothing().given(menteeScheduleMapper).save(BDDMockito.any(MenteeSchedule.class));
-			BDDMockito.willDoNothing().given(coachScheduleService).updateMatchYn(BDDMockito.anyLong(), BDDMockito.anyBoolean());
+			willDoNothing().given(menteeScheduleMapper).save(any(MenteeSchedule.class));
+			willDoNothing().given(coachScheduleService).updateMatchYn(anyLong(), anyBoolean());
 
 			MenteeScheduleResponseDto expectedResponse =
 				menteeScheduleService.saveMenteeSchedule(MENTEE_ID, SCHEDULE_ID);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(menteeSchedule.getMenteeId(), expectedResponse.menteeId());
-			Assertions.assertEquals(menteeSchedule.getCoachingScheduleId(), expectedResponse.coachingScheduleId());
+			assertNotNull(expectedResponse);
+			assertEquals(menteeSchedule.getMenteeId(), expectedResponse.menteeId());
+			assertEquals(menteeSchedule.getCoachingScheduleId(), expectedResponse.coachingScheduleId());
 		}
 
 		@Test
@@ -181,10 +189,10 @@ public class MenteeScheduleServiceTest {
 		void when_coachScheduleNotExists_expect_throwsNotFoundCoachScheduleException() {
 			Long notExistScheduleId = 1L;
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.saveMenteeSchedule(MENTEE_ID, notExistScheduleId))
 				.isInstanceOf(NotFoundCoachScheduleException.class);
 		}
@@ -192,7 +200,7 @@ public class MenteeScheduleServiceTest {
 		@Test
 		@DisplayName("멘티 스케줄이 이미 존재하면 DuplicatedMenteeScheduleException이 발생한다.")
 		void when_menteeScheduleExists_expect_throwsDuplicatedMenteeScheduleException() {
-			BDDMockito.given(menteeScheduleMapper.findByCoachingScheduleId(BDDMockito.anyLong()))
+			given(menteeScheduleMapper.findByCoachingScheduleId(anyLong()))
 				.willThrow(DuplicatedMenteeScheduleException.class);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -215,20 +223,20 @@ public class MenteeScheduleServiceTest {
 			CoachSchedule currentCoachSchedule = CoachSchedule.of(currentCoachingId, COACH_ID, LocalDateTime.now().plusDays(1), true);
 			CoachSchedule newCoachSchedule = CoachSchedule.of(newCoachingId, COACH_ID, LocalDateTime.now().plusDays(1), false);
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 					.willReturn(currentCoachSchedule);
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 					.willReturn(newCoachSchedule);
-			BDDMockito.willDoNothing().given(menteeScheduleMapper).updateCoachingScheduleId(BDDMockito.anyLong(), BDDMockito.anyLong());
-			BDDMockito.willDoNothing().given(coachScheduleService).updateMatchYn(BDDMockito.anyLong(), BDDMockito.anyBoolean());
+			willDoNothing().given(menteeScheduleMapper).updateCoachingScheduleId(anyLong(), anyLong());
+			willDoNothing().given(coachScheduleService).updateMatchYn(anyLong(), anyBoolean());
 
 			menteeScheduleService.updateMenteeSchedule(MENTEE_ID, currentCoachingId, newCoachingId);
 
-			BDDMockito.verify(coachScheduleService).getCoachSchedule(currentCoachingId, true);
-			BDDMockito.verify(coachScheduleService).getCoachSchedule(newCoachingId, false);
-			BDDMockito.verify(menteeScheduleMapper).updateCoachingScheduleId(currentCoachingId, newCoachingId);
-			BDDMockito.verify(coachScheduleService).updateMatchYn(currentCoachingId, false);
-			BDDMockito.verify(coachScheduleService).updateMatchYn(newCoachingId, true);
+			verify(coachScheduleService).getCoachSchedule(currentCoachingId, true);
+			verify(coachScheduleService).getCoachSchedule(newCoachingId, false);
+			verify(menteeScheduleMapper).updateCoachingScheduleId(currentCoachingId, newCoachingId);
+			verify(coachScheduleService).updateMatchYn(currentCoachingId, false);
+			verify(coachScheduleService).updateMatchYn(newCoachingId, true);
 		}
 
 		@Test
@@ -236,10 +244,10 @@ public class MenteeScheduleServiceTest {
 		void when_timeHasPassed_expect_throwsNotAllowedUpdateException() {
 			CoachSchedule currentCoachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now().minusDays(1), true);
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willReturn(currentCoachSchedule);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.getScheduleIfUpdatePossible(SCHEDULE_ID))
 				.isInstanceOf(NotAllowedUpdateException.class);
 		}
@@ -249,21 +257,21 @@ public class MenteeScheduleServiceTest {
 		void when_timeHasNotPassed_expect_validateUpdatePossibility() {
 			CoachSchedule currentCoachSchedule = CoachSchedule.of(1L, COACH_ID, LocalDateTime.now().plusDays(1), true);
 
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willReturn(currentCoachSchedule);
 
 			menteeScheduleService.getScheduleIfUpdatePossible(SCHEDULE_ID);
 
-			BDDMockito.verify(coachScheduleService).getCoachSchedule(1L, true);
+			verify(coachScheduleService).getCoachSchedule(1L, true);
 		}
 
 		@Test
 		@DisplayName("기존 스케줄 정보가 존재하지 않는다면 NotFoundCoachScheduleException이 발생한다.")
 		void when_currentScheduleNotExists_expect_throwsNotFoundCoachScheduleException() {
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.getScheduleIfUpdatePossible(SCHEDULE_ID))
 				.isInstanceOf(NotFoundCoachScheduleException.class);
 		}
@@ -271,10 +279,10 @@ public class MenteeScheduleServiceTest {
 		@Test
 		@DisplayName("변경하려는 스케줄 정보가 존재하지 않는다면 NotFoundCoachScheduleException이 발생한다.")
 		void when_newScheduleNotExists_expect_throwsNotFoundCoachScheduleException() {
-			BDDMockito.given(coachScheduleService.getCoachSchedule(BDDMockito.anyLong(), BDDMockito.anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.updateMenteeSchedule(MENTEE_ID, SCHEDULE_ID, SCHEDULE_ID))
 				.isInstanceOf(NotFoundCoachScheduleException.class);
 		}
@@ -288,21 +296,21 @@ public class MenteeScheduleServiceTest {
 		void when_scheduleExists_expect_deleteSchedule() {
 			MenteeSchedule menteeSchedule = MenteeSchedule.of(SCHEDULE_ID, MENTEE_ID);
 
-			BDDMockito.given(menteeScheduleMapper.findByCoachingScheduleId(BDDMockito.anyLong()))
+			given(menteeScheduleMapper.findByCoachingScheduleId(anyLong()))
 				.willReturn(Optional.of(menteeSchedule));
 
 			menteeScheduleService.deleteMenteeSchedule(SCHEDULE_ID);
 
-			BDDMockito.verify(menteeScheduleMapper).findByCoachingScheduleId(SCHEDULE_ID);
+			verify(menteeScheduleMapper).findByCoachingScheduleId(SCHEDULE_ID);
 		}
 
 		@Test
 		@DisplayName("해당 스케줄이 존재하지 않으면 NotFoundMenteeScheduleException이 발생한다.")
 		void when_scheduleNotExists_expect_throwsNotFoundMenteeScheduleException() {
-			BDDMockito.given(menteeScheduleMapper.findByCoachingScheduleId(BDDMockito.anyLong()))
+			given(menteeScheduleMapper.findByCoachingScheduleId(anyLong()))
 				.willReturn(Optional.empty());
 
-			AssertionsForClassTypes.assertThatThrownBy(() ->
+			assertThatThrownBy(() ->
 					menteeScheduleService.deleteMenteeSchedule(SCHEDULE_ID))
 				.isInstanceOf(NotFoundMenteeScheduleException.class);
 		}
