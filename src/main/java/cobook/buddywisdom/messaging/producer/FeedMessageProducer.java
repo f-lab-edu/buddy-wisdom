@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import cobook.buddywisdom.feed.dto.ScheduleEventDto;
 
+import java.util.function.Supplier;
+
 @Component
 public class FeedMessageProducer {
 
@@ -17,9 +19,12 @@ public class FeedMessageProducer {
 		this.rabbitTemplate = rabbitTemplate;
 	}
 
-	public void produceScheduleEvent(ScheduleEventDto scheduleEventDto) {
-		rabbitTemplate.convertAndSend(EXCHANGE, SCHEDULE_ROUTING_KEY, scheduleEventDto);
+	public void produceScheduleEvent(long senderId, long receiverId, Supplier<String> messageSupplier) {
+		rabbitTemplate.convertAndSend(EXCHANGE, SCHEDULE_ROUTING_KEY, ScheduleEventDto.builder()
+				.senderId(senderId)
+				.receiverId(receiverId)
+				.feedMessage(messageSupplier.get())
+				.build()
+		);
 	}
-
-
 }

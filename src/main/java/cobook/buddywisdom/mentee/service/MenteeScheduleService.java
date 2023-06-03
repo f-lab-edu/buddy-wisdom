@@ -1,29 +1,14 @@
 package cobook.buddywisdom.mentee.service;
 
-import static cobook.buddywisdom.global.vo.MessageTemplate.*;
-
-import java.text.MessageFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
-import cobook.buddywisdom.feed.dto.ScheduleEventDto;
-import cobook.buddywisdom.global.util.MessageFormatter;
-import cobook.buddywisdom.global.vo.ScheduleEventDetails;
-import cobook.buddywisdom.global.util.ScheduleEventManager;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
-import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MyCoachScheduleResponseDto;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
@@ -34,6 +19,16 @@ import cobook.buddywisdom.messaging.producer.FeedMessageProducer;
 import cobook.buddywisdom.relationship.domain.CoachingRelationship;
 import cobook.buddywisdom.relationship.service.CoachingRelationshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static cobook.buddywisdom.global.vo.MessageTemplate.CREATE_SCHEDULE;
+import static cobook.buddywisdom.global.vo.MessageTemplate.UPDATE_SCHEDULE;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,9 +39,6 @@ public class MenteeScheduleService {
 	private final CoachScheduleService coachScheduleService;
 	private final CoachingRelationshipService coachingRelationshipService;
 	private final FeedMessageProducer feedMessageProducer;
-	private final ScheduleEventManager scheduleEventManager;
-
-	private static final int DEFAULT_DAYS = 8;
 
 	public List<MenteeMonthlyScheduleResponseDto> getMenteeMonthlySchedule(long menteeId, MenteeMonthlyScheduleRequestDto request) {
 		List<MenteeMonthlySchedule> menteeMonthlyScheduleList =
@@ -74,10 +66,7 @@ public class MenteeScheduleService {
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
-		LocalDate today = LocalDate.now();
-
-		List<CoachSchedule> coachScheduleList =
-			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId(), today, today.plusDays(DEFAULT_DAYS));
+		List<CoachSchedule> coachScheduleList = coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId());
 
 		return Optional.ofNullable(coachScheduleList)
 			.stream()
@@ -94,15 +83,10 @@ public class MenteeScheduleService {
 
 		MenteeSchedule menteeSchedule = MenteeSchedule.of(coachingScheduleId, menteeId);
 		menteeScheduleMapper.save(menteeSchedule);
-
 		coachScheduleService.updateMatchYn(coachingScheduleId, true);
 
-		ScheduleEventDetails scheduleEventDetails =
-			ScheduleEventDetails.of(menteeId, coachSchedule.getCoachId(), CREATE_SCHEDULE);
-
-		MessageFormatter saveScheduleFormatter = (template, args) -> MessageFormat.format(template, args[0]);
-
-		processScheduleEvent(scheduleEventDetails, saveScheduleFormatter, coachSchedule.getPossibleDateTime());
+        feedMessageProducer.produceScheduleEvent(menteeId, coachSchedule.getCoachId(), ()
+                -> MessageFormat.format(CREATE_SCHEDULE, coachSchedule.getPossibleDateTime()));
 
 		return MenteeScheduleResponseDto.from(menteeSchedule);
 	}
@@ -128,22 +112,8 @@ public class MenteeScheduleService {
 		coachScheduleService.updateMatchYn(currentCoachingId, false);
 		coachScheduleService.updateMatchYn(newCoachingId, true);
 
-		ScheduleEventDetails scheduleEventDetails = 
-			ScheduleEventDetails.of(menteeId, currentCoachSchedule.getCoachId(), UPDATE_SCHEDULE);
-
-		MessageFormatter updateScheduleFormatter = (template, args) -> 
-			MessageFormat.format(template, args[0], args[1]);
-
-		processScheduleEvent(scheduleEventDetails, updateScheduleFormatter,
-			currentCoachSchedule.getPossibleDateTime(), newCoachSchedule.getPossibleDateTime());
-	}
-
-	private void processScheduleEvent(ScheduleEventDetails scheduleEventDetails, MessageFormatter updateScheduleFormatter,
-										LocalDateTime ...args) {
-		ScheduleEventDto scheduleEventDto =
-			scheduleEventManager.createByScheduleDetails(scheduleEventDetails, updateScheduleFormatter, args);
-
-		feedMessageProducer.produceScheduleEvent(scheduleEventDto);
+        feedMessageProducer.produceScheduleEvent(menteeId, currentCoachSchedule.getCoachId(), () ->
+                MessageFormat.format(UPDATE_SCHEDULE, currentCoachSchedule.getPossibleDateTime(), newCoachSchedule.getPossibleDateTime()));
 	}
 
 	public CoachSchedule getScheduleIfUpdatePossible(long coachScheduleId) {

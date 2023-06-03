@@ -1,25 +1,27 @@
 package cobook.buddywisdom.cancellation.service;
 
-import static cobook.buddywisdom.global.vo.MessageTemplate.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import cobook.buddywisdom.cancellation.vo.DirectionType;
 import cobook.buddywisdom.cancellation.domain.CancelRequest;
 import cobook.buddywisdom.cancellation.dto.response.CancelRequestResponseDto;
 import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
 import cobook.buddywisdom.cancellation.exception.NotFoundCancelRequestException;
 import cobook.buddywisdom.cancellation.mapper.CancelRequestMapper;
+import cobook.buddywisdom.cancellation.vo.DirectionType;
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
+import cobook.buddywisdom.messaging.producer.FeedMessageProducer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static cobook.buddywisdom.global.vo.MessageTemplate.CONFIRM_CANCEL_SCHEDULE;
+import static cobook.buddywisdom.global.vo.MessageTemplate.REQUEST_CANCEL_SCHEDULE;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,7 +31,7 @@ public class CancelRequestService {
 	private final CancelRequestMapper cancelRequestMapper;
 	private final CoachScheduleService coachScheduleService;
 	private final MenteeScheduleService menteeScheduleService;
-	private final CancelRequestEventService cancelRequestEventService;
+	private final FeedMessageProducer feedMessageProducer;
 
 	public List<CancelRequestResponseDto> getCancelRequest(long memberId, DirectionType direction) {
 		List<CancelRequest> cancelRequestList = new ArrayList<>();
@@ -56,8 +58,8 @@ public class CancelRequestService {
 		CancelRequest cancelRequest = CancelRequest.requestOf(menteeScheduleId, menteeId, coachSchedule.getCoachId(), reason);
 		cancelRequestMapper.save(cancelRequest);
 
-		cancelRequestEventService.produceCancelRequestEvent(menteeId, coachSchedule.getCoachId(),
-			coachSchedule.getPossibleDateTime(), REQUEST_CANCEL_SCHEDULE);
+		feedMessageProducer.produceScheduleEvent(menteeId, coachSchedule.getCoachId(),
+				() -> MessageFormat.format(REQUEST_CANCEL_SCHEDULE, coachSchedule.getPossibleDateTime()));
 
 		return CancelRequestResponseDto.from(cancelRequest);
 	}
@@ -77,7 +79,8 @@ public class CancelRequestService {
 		coachScheduleService.updateMatchYn(menteeScheduleId, false);
 
 		CoachSchedule coachSchedule = coachScheduleService.getCoachSchedule(menteeScheduleId, false);
-		cancelRequestEventService.produceCancelRequestEvent(memberId, coachSchedule.getCoachId(),
-			coachSchedule.getPossibleDateTime(), CONFIRM_CANCEL_SCHEDULE);
+		feedMessageProducer.produceScheduleEvent(memberId, coachSchedule.getCoachId(),
+				() -> MessageFormat.format(CONFIRM_CANCEL_SCHEDULE, coachSchedule.getPossibleDateTime()));
+
 	}
 }
