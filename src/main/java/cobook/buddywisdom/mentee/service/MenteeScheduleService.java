@@ -42,8 +42,6 @@ public class MenteeScheduleService {
 	private final FeedMessageProducer feedMessageProducer;
 	private final MessageUtil messageUtil;
 
-	private static final int DEFAULT_DAYS = 8;
-
 	public List<MenteeMonthlyScheduleResponseDto> getMenteeMonthlySchedule(long menteeId, MenteeMonthlyScheduleRequestDto request) {
 		List<MenteeMonthlySchedule> menteeMonthlyScheduleList =
 			menteeScheduleMapper.findAllByMenteeIdAndPossibleDateTime(menteeId, request.startDateTime(), request.endDateTime());
@@ -70,10 +68,8 @@ public class MenteeScheduleService {
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
-		LocalDate today = LocalDate.now();
-
 		List<CoachSchedule> coachScheduleList =
-			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId(), today, today.plusDays(DEFAULT_DAYS));
+			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId());
 
 		return Optional.ofNullable(coachScheduleList)
 			.stream()
