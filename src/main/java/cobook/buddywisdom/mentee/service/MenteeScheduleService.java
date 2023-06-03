@@ -4,7 +4,6 @@ import static cobook.buddywisdom.global.vo.MessageTemplate.*;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
-import cobook.buddywisdom.feed.dto.ScheduleEventDto;
-import cobook.buddywisdom.global.util.MessageFormatter;
-import cobook.buddywisdom.global.vo.ScheduleEventDetails;
-import cobook.buddywisdom.global.util.ScheduleEventManager;
+import cobook.buddywisdom.global.util.MessageUtil;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
@@ -44,7 +40,7 @@ public class MenteeScheduleService {
 	private final CoachScheduleService coachScheduleService;
 	private final CoachingRelationshipService coachingRelationshipService;
 	private final FeedMessageProducer feedMessageProducer;
-	private final ScheduleEventManager scheduleEventManager;
+	private final MessageUtil messageUtil;
 
 	private static final int DEFAULT_DAYS = 8;
 
@@ -94,15 +90,11 @@ public class MenteeScheduleService {
 
 		MenteeSchedule menteeSchedule = MenteeSchedule.of(coachingScheduleId, menteeId);
 		menteeScheduleMapper.save(menteeSchedule);
-
 		coachScheduleService.updateMatchYn(coachingScheduleId, true);
 
-		ScheduleEventDetails scheduleEventDetails =
-			ScheduleEventDetails.of(menteeId, coachSchedule.getCoachId(), CREATE_SCHEDULE);
-
-		MessageFormatter saveScheduleFormatter = (template, args) -> MessageFormat.format(template, args[0]);
-
-		processScheduleEvent(scheduleEventDetails, saveScheduleFormatter, coachSchedule.getPossibleDateTime());
+		String dateTime = messageUtil.convertToString(coachSchedule.getPossibleDateTime());
+		feedMessageProducer.produceScheduleEvent(menteeId, coachSchedule.getCoachId(), () ->
+			MessageFormat.format(CREATE_SCHEDULE, dateTime));
 
 		return MenteeScheduleResponseDto.from(menteeSchedule);
 	}
@@ -128,22 +120,10 @@ public class MenteeScheduleService {
 		coachScheduleService.updateMatchYn(currentCoachingId, false);
 		coachScheduleService.updateMatchYn(newCoachingId, true);
 
-		ScheduleEventDetails scheduleEventDetails = 
-			ScheduleEventDetails.of(menteeId, currentCoachSchedule.getCoachId(), UPDATE_SCHEDULE);
-
-		MessageFormatter updateScheduleFormatter = (template, args) -> 
-			MessageFormat.format(template, args[0], args[1]);
-
-		processScheduleEvent(scheduleEventDetails, updateScheduleFormatter,
-			currentCoachSchedule.getPossibleDateTime(), newCoachSchedule.getPossibleDateTime());
-	}
-
-	private void processScheduleEvent(ScheduleEventDetails scheduleEventDetails, MessageFormatter updateScheduleFormatter,
-										LocalDateTime ...args) {
-		ScheduleEventDto scheduleEventDto =
-			scheduleEventManager.createByScheduleDetails(scheduleEventDetails, updateScheduleFormatter, args);
-
-		feedMessageProducer.produceScheduleEvent(scheduleEventDto);
+		String currentDateTime = messageUtil.convertToString(currentCoachSchedule.getPossibleDateTime());
+		String newDateTime = messageUtil.convertToString(newCoachSchedule.getPossibleDateTime());
+		feedMessageProducer.produceScheduleEvent(menteeId, currentCoachSchedule.getCoachId(), () ->
+			MessageFormat.format(UPDATE_SCHEDULE, currentDateTime, newDateTime));
 	}
 
 	public CoachSchedule getScheduleIfUpdatePossible(long coachScheduleId) {
