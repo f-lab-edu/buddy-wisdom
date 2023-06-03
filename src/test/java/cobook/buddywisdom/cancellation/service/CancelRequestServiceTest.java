@@ -1,26 +1,5 @@
 package cobook.buddywisdom.cancellation.service;
 
-import static cobook.buddywisdom.cancellation.vo.DirectionType.*;
-import static org.mockito.ArgumentMatchers.*;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.BeanUtils;
-
 import cobook.buddywisdom.cancellation.domain.CancelRequest;
 import cobook.buddywisdom.cancellation.dto.response.CancelRequestResponseDto;
 import cobook.buddywisdom.cancellation.exception.ConfirmedCancelRequestException;
@@ -32,6 +11,34 @@ import cobook.buddywisdom.coach.service.CoachScheduleService;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.exception.NotFoundMenteeScheduleException;
 import cobook.buddywisdom.mentee.service.MenteeScheduleService;
+import cobook.buddywisdom.messaging.producer.FeedMessageProducer;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.BeanUtils;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static cobook.buddywisdom.cancellation.vo.DirectionType.RECEIVED;
+import static cobook.buddywisdom.cancellation.vo.DirectionType.SENT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(MockitoExtension.class)
 public class CancelRequestServiceTest {
@@ -41,16 +48,12 @@ public class CancelRequestServiceTest {
 
 	@Mock
 	MenteeScheduleService menteeScheduleService;
-
 	@Mock
 	CoachScheduleService coachScheduleService;
-
 	@Mock
-	CancelRequestEventService cancelRequestEventService;
-
+	FeedMessageProducer feedMessageProducer;
 	@InjectMocks
 	CancelRequestService cancelRequestService;
-
 	private static CancelRequest cancelRequest;
 
 	@BeforeAll
@@ -65,65 +68,65 @@ public class CancelRequestServiceTest {
 		@Test
 		@DisplayName("보낸 취소 요청 내역이 존재하면 취소 요청 정보를 반환한다.")
 		void when_sentRequestsExist_expect_returnResponseList() {
-			BDDMockito.given(cancelRequestMapper.findBySenderId(anyLong()))
+			given(cancelRequestMapper.findBySenderId(anyLong()))
 				.willReturn(List.of(cancelRequest));
 
 			List<CancelRequestResponseDto> expectedResponse =
 				cancelRequestService.getCancelRequest(4L, SENT);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(1, expectedResponse.size());
+			assertNotNull(expectedResponse);
+			assertEquals(1, expectedResponse.size());
 
 			CancelRequestResponseDto returnedDto = expectedResponse.get(0);
-			Assertions.assertEquals(cancelRequest.getMenteeScheduleId(), returnedDto.menteeScheduleId());
-			Assertions.assertEquals(cancelRequest.getSenderId(), returnedDto.senderId());
-			Assertions.assertEquals(cancelRequest.getReceiverId(), returnedDto.receiverId());
-			Assertions.assertEquals(cancelRequest.getReason(), returnedDto.reason());
+			assertEquals(cancelRequest.getMenteeScheduleId(), returnedDto.menteeScheduleId());
+			assertEquals(cancelRequest.getSenderId(), returnedDto.senderId());
+			assertEquals(cancelRequest.getReceiverId(), returnedDto.receiverId());
+			assertEquals(cancelRequest.getReason(), returnedDto.reason());
 		}
 
 		@Test
 		@DisplayName("보낸 취소 요청 내역이 존재하지 않으면 빈 배열을 반환한다.")
 		void when_sentRequestsNotExist_expect_returnEmptyArray() {
-			BDDMockito.given(cancelRequestMapper.findBySenderId(anyLong()))
+			given(cancelRequestMapper.findBySenderId(anyLong()))
 				.willReturn(Collections.emptyList());
 
 			List<CancelRequestResponseDto> expectedResponse =
 				cancelRequestService.getCancelRequest(4L, SENT);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertTrue(expectedResponse.isEmpty());
+			assertNotNull(expectedResponse);
+			assertTrue(expectedResponse.isEmpty());
 		}
 
 		@Test
 		@DisplayName("받은 취소 요청 내역이 존재하면 취소 요청 정보를 반환한다.")
 		void when_receivedRequestsExist_expect_returnResponseList() {
-			BDDMockito.given(cancelRequestMapper.findByReceiverId(anyLong()))
+			given(cancelRequestMapper.findByReceiverId(anyLong()))
 				.willReturn(List.of(cancelRequest));
 
 			List<CancelRequestResponseDto> expectedResponse =
 				cancelRequestService.getCancelRequest(4L, RECEIVED);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(1, expectedResponse.size());
+			assertNotNull(expectedResponse);
+			assertEquals(1, expectedResponse.size());
 
 			CancelRequestResponseDto returnedDto = expectedResponse.get(0);
-			Assertions.assertEquals(cancelRequest.getMenteeScheduleId(), returnedDto.menteeScheduleId());
-			Assertions.assertEquals(cancelRequest.getSenderId(), returnedDto.senderId());
-			Assertions.assertEquals(cancelRequest.getReceiverId(), returnedDto.receiverId());
-			Assertions.assertEquals(cancelRequest.getReason(), returnedDto.reason());
+			assertEquals(cancelRequest.getMenteeScheduleId(), returnedDto.menteeScheduleId());
+			assertEquals(cancelRequest.getSenderId(), returnedDto.senderId());
+			assertEquals(cancelRequest.getReceiverId(), returnedDto.receiverId());
+			assertEquals(cancelRequest.getReason(), returnedDto.reason());
 		}
 
 		@Test
 		@DisplayName("받은 취소 요청 내역이 존재하지 않으면 빈 배열을 반환한다.")
 		void when_receivedRequestsNotExist_expect_returnEmptyArray() {
-			BDDMockito.given(cancelRequestMapper.findByReceiverId(anyLong()))
+			given(cancelRequestMapper.findByReceiverId(anyLong()))
 				.willReturn(Collections.emptyList());
 
 			List<CancelRequestResponseDto> expectedResponse =
 				cancelRequestService.getCancelRequest(4L, RECEIVED);
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertTrue(expectedResponse.isEmpty());
+			assertNotNull(expectedResponse);
+			assertTrue(expectedResponse.isEmpty());
 		}
 	}
 
@@ -136,11 +139,11 @@ public class CancelRequestServiceTest {
 			MenteeSchedule menteeSchedule = MenteeSchedule.of(1L, 4L);
 			CoachSchedule coachSchedule = CoachSchedule.of(1L, 3L, LocalDateTime.now(), false);
 
-			BDDMockito.given(menteeScheduleService.getMenteeSchedule(anyLong(), anyLong()))
+			given(menteeScheduleService.getMenteeSchedule(anyLong(), anyLong()))
 				.willReturn(menteeSchedule);
-			BDDMockito.given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willReturn(coachSchedule);
-			BDDMockito.doAnswer(invocation -> {
+			doAnswer(invocation -> {
 				CancelRequest savedCancelRequest = invocation.getArgument(0);
 				BeanUtils.copyProperties(cancelRequest, savedCancelRequest);
 				return null;
@@ -150,14 +153,14 @@ public class CancelRequestServiceTest {
 			CancelRequestResponseDto expectedResponse =
 				cancelRequestService.saveCancelRequestByMentee(3L, 1L, "취소 사유");
 
-			Assertions.assertNotNull(expectedResponse);
-			Assertions.assertEquals(cancelRequest.getId(), expectedResponse.menteeScheduleId());
+			assertNotNull(expectedResponse);
+			assertEquals(cancelRequest.getId(), expectedResponse.menteeScheduleId());
 		}
 
 		@Test
 		@DisplayName("해당하는 멘티 스케줄이 존재하지 않으면 NotFoundMenteeScheduleException이 발생한다.")
 		void when_menteeScheduleDoesNotExists_expect_throwsNotFoundMenteeScheduleException() {
-			BDDMockito.given(menteeScheduleService.getMenteeSchedule(anyLong(), anyLong()))
+			given(menteeScheduleService.getMenteeSchedule(anyLong(), anyLong()))
 				.willThrow(NotFoundMenteeScheduleException.class);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -168,7 +171,7 @@ public class CancelRequestServiceTest {
 		@Test
 		@DisplayName("해당하는 코칭 스케줄이 존재하지 않으면 NotFoundCoachScheduleException이 발생한다.")
 		void when_coachScheduleNotExists_expect_throwsNotFoundCoachScheduleException() {
-			BDDMockito.given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willThrow(NotFoundCoachScheduleException.class);
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -185,13 +188,11 @@ public class CancelRequestServiceTest {
 		void when_requestIdsArdValid_expect_updateConfirmYnAndDeleteSchedule() {
 			CoachSchedule coachSchedule = CoachSchedule.of(1L, 3L, LocalDateTime.now(), false);
 
-			BDDMockito.given(cancelRequestMapper.findById(anyLong()))
+			given(cancelRequestMapper.findById(anyLong()))
 				.willReturn(Optional.ofNullable(cancelRequest));
-			BDDMockito.willDoNothing().
-				given(cancelRequestMapper).updateConfirmYn(anyLong(), anyBoolean());
-			BDDMockito.willDoNothing()
-				.given(menteeScheduleService).deleteMenteeSchedule(anyLong());
-			BDDMockito.given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
+			willDoNothing().given(cancelRequestMapper).updateConfirmYn(anyLong(), anyBoolean());
+			willDoNothing().given(menteeScheduleService).deleteMenteeSchedule(anyLong());
+			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 					.willReturn(coachSchedule);
 
 			cancelRequestService.confirmCancelRequest(1L, 1L, 1L);
@@ -204,7 +205,7 @@ public class CancelRequestServiceTest {
 		@Test
 		@DisplayName("취소 요청 내역이 존재하지 않으면 NotFoundCancelRequestException이 발생한다.")
 		void when_cancelRequestNotExists_expect_throwsNotFoundCancelRequestException() {
-			BDDMockito.given(cancelRequestMapper.findById(anyLong()))
+			given(cancelRequestMapper.findById(anyLong()))
 				.willReturn(Optional.empty());
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -218,8 +219,7 @@ public class CancelRequestServiceTest {
 			CancelRequest confirmedRequest = CancelRequest.of(1L, 1L, 4L, 3L,
 				"취소 사유", true, LocalDateTime.now(), LocalDateTime.now());
 
-			BDDMockito.given(cancelRequestMapper.findById(anyLong()))
-				.willReturn(Optional.of(confirmedRequest));
+			given(cancelRequestMapper.findById(anyLong())).willReturn(Optional.of(confirmedRequest));
 
 			AssertionsForClassTypes.assertThatThrownBy(() ->
 					cancelRequestService.confirmCancelRequest(1L, 1L, 1L))

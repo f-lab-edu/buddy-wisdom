@@ -1,32 +1,15 @@
 package cobook.buddywisdom.mentee.service;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.exception.NotFoundCoachScheduleException;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
-import cobook.buddywisdom.global.util.ScheduleEventManager;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
 import cobook.buddywisdom.mentee.domain.MenteeScheduleFeedback;
+import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeMonthlyScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleFeedbackResponseDto;
-import cobook.buddywisdom.mentee.dto.request.MenteeMonthlyScheduleRequestDto;
 import cobook.buddywisdom.mentee.dto.response.MenteeScheduleResponseDto;
 import cobook.buddywisdom.mentee.dto.response.MyCoachScheduleResponseDto;
 import cobook.buddywisdom.mentee.exception.DuplicatedMenteeScheduleException;
@@ -38,6 +21,21 @@ import cobook.buddywisdom.relationship.domain.CoachingRelationship;
 import cobook.buddywisdom.relationship.exception.NotFoundRelationshipException;
 import cobook.buddywisdom.relationship.service.CoachingRelationshipService;
 import cobook.buddywisdom.util.WithMockCustomUser;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class MenteeScheduleServiceTest {
@@ -50,9 +48,6 @@ public class MenteeScheduleServiceTest {
 
 	@Mock
 	CoachingRelationshipService coachingRelationshipService;
-
-	@Mock
-	ScheduleEventManager scheduleEventManager;
 
 	@Mock
 	FeedMessageProducer feedMessageProducer;
@@ -141,7 +136,7 @@ public class MenteeScheduleServiceTest {
 
 			BDDMockito.given(coachingRelationshipService.getCoachingRelationshipByMenteeId(BDDMockito.anyLong()))
 					.willReturn(coachingRelationship);
-			BDDMockito.given(coachScheduleService.getAllCoachingSchedule(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any()))
+			BDDMockito.given(coachScheduleService.getAllCoachingSchedule(BDDMockito.anyLong()))
 					.willReturn(List.of(coachSchedule));
 
 			List<MyCoachScheduleResponseDto> expectedResponse =
