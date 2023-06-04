@@ -5,17 +5,15 @@ import org.springframework.stereotype.Component;
 
 import cobook.buddywisdom.feed.service.FeedService;
 import cobook.buddywisdom.feed.dto.ScheduleEventDto;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class FeedMessageConsumer {
 
 	private final FeedService feedService;
 
 	private static final String SCHEDULE_QUEUE = "schedule.events";
-
-	public FeedMessageConsumer(FeedService feedService) {
-		this.feedService = feedService;
-	}
 
 	@RabbitListener(queues = SCHEDULE_QUEUE)
 	public void consumeFromScheduleEvents(ScheduleEventDto scheduleEventDto) {

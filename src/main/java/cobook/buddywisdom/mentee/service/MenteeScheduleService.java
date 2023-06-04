@@ -2,19 +2,17 @@ package cobook.buddywisdom.mentee.service;
 
 import static cobook.buddywisdom.global.vo.MessageTemplate.*;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cobook.buddywisdom.coach.domain.CoachSchedule;
 import cobook.buddywisdom.coach.service.CoachScheduleService;
-import cobook.buddywisdom.global.vo.ScheduleEventDetails;
-import cobook.buddywisdom.global.vo.UpdateScheduleEventDetails;
-import cobook.buddywisdom.global.util.ScheduleEventManager;
+import cobook.buddywisdom.global.util.MessageUtil;
 import cobook.buddywisdom.global.exception.ErrorMessage;
 import cobook.buddywisdom.mentee.domain.MenteeMonthlySchedule;
 import cobook.buddywisdom.mentee.domain.MenteeSchedule;
@@ -42,9 +40,7 @@ public class MenteeScheduleService {
 	private final CoachScheduleService coachScheduleService;
 	private final CoachingRelationshipService coachingRelationshipService;
 	private final FeedMessageProducer feedMessageProducer;
-	private final ScheduleEventManager scheduleEventManager;
-
-	private static final int DEFAULT_DAYS = 8;
+	private final MessageUtil messageUtil;
 
 	public List<MenteeMonthlyScheduleResponseDto> getMenteeMonthlySchedule(long menteeId, MenteeMonthlyScheduleRequestDto request) {
 		List<MenteeMonthlySchedule> menteeMonthlyScheduleList =
@@ -54,7 +50,7 @@ public class MenteeScheduleService {
 			.stream()
 			.flatMap(List::stream)
 			.map(MenteeMonthlyScheduleResponseDto::from)
-			.collect(Collectors.toUnmodifiableList());
+			.toList();
 	}
 
 	public MenteeScheduleFeedbackResponseDto getMenteeScheduleFeedback(long menteeId, long coachingScheduleId) {
@@ -72,16 +68,14 @@ public class MenteeScheduleService {
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
-		LocalDate today = LocalDate.now();
-
 		List<CoachSchedule> coachScheduleList =
-			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId(), today, today.plusDays(DEFAULT_DAYS));
+			coachScheduleService.getAllCoachingSchedule(coachingRelationship.getCoachId());
 
 		return Optional.ofNullable(coachScheduleList)
 			.stream()
 			.flatMap(List::stream)
 			.map(MyCoachScheduleResponseDto::from)
-			.collect(Collectors.toUnmodifiableList());
+			.toList();
 	}
 
 	@Transactional
@@ -92,13 +86,11 @@ public class MenteeScheduleService {
 
 		MenteeSchedule menteeSchedule = MenteeSchedule.of(coachingScheduleId, menteeId);
 		menteeScheduleMapper.save(menteeSchedule);
-
 		coachScheduleService.updateMatchYn(coachingScheduleId, true);
 
-		ScheduleEventDetails scheduleEventDetails =
-			ScheduleEventDetails.of(menteeId, coachSchedule.getCoachId(), coachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(
-			scheduleEventManager.createByScheduleDetails(scheduleEventDetails, CREATE_SCHEDULE.getTemplate()));
+		String dateTime = messageUtil.convertToString(coachSchedule.getPossibleDateTime());
+		feedMessageProducer.produceScheduleEvent(menteeId, coachSchedule.getCoachId(), () ->
+			MessageFormat.format(CREATE_SCHEDULE, dateTime));
 
 		return MenteeScheduleResponseDto.from(menteeSchedule);
 	}
@@ -124,10 +116,10 @@ public class MenteeScheduleService {
 		coachScheduleService.updateMatchYn(currentCoachingId, false);
 		coachScheduleService.updateMatchYn(newCoachingId, true);
 
-		UpdateScheduleEventDetails updateScheduleEventDetails = UpdateScheduleEventDetails.of(menteeId, currentCoachSchedule.getCoachId(),
-			currentCoachSchedule.getPossibleDateTime(), newCoachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(
-			scheduleEventManager.createByUpdateScheduleDetails(updateScheduleEventDetails, UPDATE_SCHEDULE.getTemplate()));
+		String currentDateTime = messageUtil.convertToString(currentCoachSchedule.getPossibleDateTime());
+		String newDateTime = messageUtil.convertToString(newCoachSchedule.getPossibleDateTime());
+		feedMessageProducer.produceScheduleEvent(menteeId, currentCoachSchedule.getCoachId(), () ->
+			MessageFormat.format(UPDATE_SCHEDULE, currentDateTime, newDateTime));
 	}
 
 	public CoachSchedule getScheduleIfUpdatePossible(long coachScheduleId) {
