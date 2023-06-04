@@ -2,6 +2,11 @@ package cobook.buddywisdom.feedback.controller;
 
 import static cobook.buddywisdom.global.vo.MemberApiType.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Optional;
 
@@ -59,16 +64,14 @@ public class FeedbackControllerTest {
 			Feedback feedback = Feedback.of(scheduleId, "코치 피드백", "멘티 피드백");
 			FeedbackResponseDto feedbackResponseDto = FeedbackResponseDto.from(feedback);
 
-			BDDMockito.given(feedbackService.getFeedback(anyLong()))
-				.willReturn(Optional.of(feedbackResponseDto));
+			given(feedbackService.getFeedback(anyLong())).willReturn(Optional.of(feedbackResponseDto));
 
 			ResultActions response =
-				mockMvc.perform(
-					MockMvcRequestBuilders.get(BASE_URL + memberApiType + "/feedback/" + scheduleId))
-				.andDo(MockMvcResultHandlers.print());
+				mockMvc.perform(get(BASE_URL + memberApiType + "/feedback/" + scheduleId))
+				.andDo(print());
 
-			BDDMockito.verify(feedbackService).getFeedback(anyLong());
-			response.andExpect(MockMvcResultMatchers.status().isOk());
+			verify(feedbackService).getFeedback(anyLong());
+			response.andExpect(status().isOk());
 		}
 	}
 
@@ -81,19 +84,18 @@ public class FeedbackControllerTest {
 		void when_menteeRequestInformationIsValid_expect_callMethodAndReturn200Ok() throws Exception {
 			UpdateFeedbackRequestDto request = new UpdateFeedbackRequestDto(1L, "멘티 피드백");
 
-			BDDMockito.willDoNothing()
-				.given(feedbackService).updateFeedbackByMentee(anyLong(), anyString());
+			willDoNothing()
+				.given(feedbackService).updateFeedbackByMentee(anyLong(), anyLong(), anyString());
 
 			ResultActions response =
-				mockMvc.perform(
-					MockMvcRequestBuilders.patch(BASE_URL + MENTEES + "/feedback")
+				mockMvc.perform(patch(BASE_URL + MENTEES + "/feedback")
 						.with(SecurityMockMvcRequestPostProcessors.csrf())
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request)))
-				.andDo(MockMvcResultHandlers.print());
+				.andDo(print());
 
-			BDDMockito.verify(feedbackService).updateFeedbackByMentee(anyLong(), anyString());
-			response.andExpect(MockMvcResultMatchers.status().isNoContent());
+			verify(feedbackService).updateFeedbackByMentee(anyLong(), anyLong(), anyString());
+			response.andExpect(status().isNoContent());
 		}
 
 		@Test
@@ -101,19 +103,18 @@ public class FeedbackControllerTest {
 		void when_coachRequestInformationIsValid_expect_callMethodAndReturn200Ok() throws Exception {
 			UpdateFeedbackRequestDto request = new UpdateFeedbackRequestDto(1L, "코치 피드백");
 
-			BDDMockito.willDoNothing()
-				.given(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
+			willDoNothing()
+				.given(feedbackService).updateFeedbackByCoach(anyLong(), anyLong(), anyString());
 
 			ResultActions response =
-				mockMvc.perform(
-						MockMvcRequestBuilders.patch(BASE_URL + COACHES + "/feedback")
+				mockMvc.perform(patch(BASE_URL + COACHES + "/feedback")
 							.with(SecurityMockMvcRequestPostProcessors.csrf())
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(objectMapper.writeValueAsString(request)))
-					.andDo(MockMvcResultHandlers.print());
+					.andDo(print());
 
-			BDDMockito.verify(feedbackService).updateFeedbackByCoach(anyLong(), anyString());
-			response.andExpect(MockMvcResultMatchers.status().isNoContent());
+			verify(feedbackService).updateFeedbackByCoach(anyLong(), anyLong(), anyString());
+			response.andExpect(status().isNoContent());
 		}
 	}
 }
