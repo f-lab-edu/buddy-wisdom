@@ -133,7 +133,7 @@ public class CancelRequestServiceTest {
 	}
 
 	@Nested
-	@DisplayName("코칭 취소 요청")
+	@DisplayName("멘티 코칭 취소 요청")
 	class CreateCancelRequestTest {
 		@Test
 		@DisplayName("유효한 정보가 전달되면 요청이 완료되고 취소 요청 정보를 반환한다.")
@@ -183,7 +183,7 @@ public class CancelRequestServiceTest {
 	}
 
 	@Nested
-	@DisplayName("코칭 취소 요청 확인")
+	@DisplayName("멘티 코칭 취소 요청 확인")
 	class UpdateCancelRequestTest {
 		@Test
 		@DisplayName("취소 요청 및 일정 정보가 전달되면 상태 값을 변경하고 해당 스케줄을 삭제한다.")
@@ -197,7 +197,7 @@ public class CancelRequestServiceTest {
 			given(coachScheduleService.getCoachSchedule(anyLong(), anyBoolean()))
 				.willReturn(coachSchedule);
 
-			cancelRequestService.confirmCancelRequest(1L, 1L, 1L);
+			cancelRequestService.confirmCancelRequestByMentee(1L, 1L, 1L);
 
 			verify(cancelRequestMapper).findById(1L);
 			verify(cancelRequestMapper).updateConfirmYn(1L, true);
@@ -211,7 +211,7 @@ public class CancelRequestServiceTest {
 				.willReturn(Optional.empty());
 
 			assertThatThrownBy(() ->
-					cancelRequestService.confirmCancelRequest(1L, 1L, 1L))
+					cancelRequestService.confirmCancelRequestByMentee(1L, 1L, 1L))
 				.isInstanceOf(NotFoundCancelRequestException.class);
 		}
 
@@ -225,7 +225,7 @@ public class CancelRequestServiceTest {
 				.willReturn(Optional.of(confirmedRequest));
 
 			assertThatThrownBy(() ->
-					cancelRequestService.confirmCancelRequest(1L, 1L, 1L))
+					cancelRequestService.confirmCancelRequestByMentee(1L, 1L, 1L))
 				.isInstanceOf(ConfirmedCancelRequestException.class);
 		}
 	}
