@@ -65,6 +65,11 @@ public class MenteeScheduleService {
 			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
 	}
 
+	public MenteeSchedule getMenteeScheduleByScheduleId(long coachingScheduleId) {
+		return menteeScheduleMapper.findByCoachingScheduleId(coachingScheduleId)
+			.orElseThrow(() -> new NotFoundMenteeScheduleException(ErrorMessage.NOT_FOUND_MENTEE_SCHEDULE));
+	}
+
 	public List<MyCoachScheduleResponseDto> getMyCoachSchedule(long menteeId) {
 		CoachingRelationship coachingRelationship = coachingRelationshipService.getCoachingRelationshipByMenteeId(menteeId);
 
