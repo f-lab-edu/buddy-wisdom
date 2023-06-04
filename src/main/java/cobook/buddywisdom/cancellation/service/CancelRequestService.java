@@ -1,8 +1,10 @@
 package cobook.buddywisdom.cancellation.service;
 
+import static cobook.buddywisdom.cancellation.vo.DirectionType.*;
 import static cobook.buddywisdom.global.vo.MessageTemplate.*;
 
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +40,9 @@ public class CancelRequestService {
 	public List<CancelRequestResponseDto> getCancelRequest(long memberId, DirectionType direction) {
 		List<CancelRequest> cancelRequestList = new ArrayList<>();
 
-		if (direction.equals(DirectionType.SENT)) {
+		if (SENT.equals(direction)) {
 			cancelRequestList = cancelRequestMapper.findBySenderId(memberId);
-		} else if (direction.equals(DirectionType.RECEIVED)) {
+		} else if (RECEIVED.equals(direction)) {
 			cancelRequestList = cancelRequestMapper.findByReceiverId(memberId);
 		}
 
@@ -56,20 +58,27 @@ public class CancelRequestService {
 		menteeScheduleService.getMenteeSchedule(menteeId, menteeScheduleId);
 
 		CoachSchedule coachSchedule = coachScheduleService.getCoachSchedule(menteeScheduleId, true);
-
 		CancelRequest cancelRequest = CancelRequest.requestOf(menteeScheduleId, menteeId, coachSchedule.getCoachId(), reason);
 		cancelRequestMapper.save(cancelRequest);
 
-		String dateTime = messageUtil.convertToString(coachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(menteeId, coachSchedule.getCoachId(), () ->
-			MessageFormat.format(REQUEST_CANCEL_SCHEDULE, dateTime));
+		processEventProducer(menteeId, coachSchedule.getCoachId(),
+			coachSchedule.getPossibleDateTime(), REQUEST_CANCEL_SCHEDULE);
 
 		return CancelRequestResponseDto.from(cancelRequest);
 	}
 
+	@Transactional
+	public void confirmCancelRequestByMentee(long menteeId, long cancelRequestId, long menteeScheduleId) {
+		confirmCancelRequest(cancelRequestId, menteeScheduleId);
+
+		CoachSchedule coachSchedule = coachScheduleService.getCoachSchedule(menteeScheduleId, false);
+
+		processEventProducer(menteeId, coachSchedule.getCoachId(),
+			coachSchedule.getPossibleDateTime(), CONFIRM_CANCEL_SCHEDULE);
+	}
 
 	@Transactional
-	public void confirmCancelRequest(long memberId, long cancelRequestId, long menteeScheduleId) {
+	public void confirmCancelRequest(long cancelRequestId, long menteeScheduleId) {
 		CancelRequest cancelRequest = cancelRequestMapper.findById(cancelRequestId)
 			.orElseThrow(() -> new NotFoundCancelRequestException(ErrorMessage.NOT_FOUND_CANCEL_REQUEST));
 
@@ -80,11 +89,12 @@ public class CancelRequestService {
 		cancelRequestMapper.updateConfirmYn(cancelRequestId, true);
 		menteeScheduleService.deleteMenteeSchedule(menteeScheduleId);
 		coachScheduleService.updateMatchYn(menteeScheduleId, false);
+	}
 
-		CoachSchedule coachSchedule = coachScheduleService.getCoachSchedule(menteeScheduleId, false);
-
-		String dateTime = messageUtil.convertToString(coachSchedule.getPossibleDateTime());
-		feedMessageProducer.produceScheduleEvent(memberId, coachSchedule.getCoachId(), () ->
-			MessageFormat.format(CONFIRM_CANCEL_SCHEDULE, dateTime));
+	private void processEventProducer(long senderId, long receiverId,
+										LocalDateTime localDateTime, String template) {
+		String dateTime = messageUtil.convertToString(localDateTime);
+		feedMessageProducer.produceScheduleEvent(senderId, receiverId, () ->
+			MessageFormat.format(template, dateTime));
 	}
 }
