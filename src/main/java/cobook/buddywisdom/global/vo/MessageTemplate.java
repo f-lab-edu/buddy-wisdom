@@ -12,4 +12,5 @@ public class MessageTemplate {
 	public static final String REQUEST_CANCEL_SCHEDULE = "%s님이 {0} 코칭 일정 취소 요청을 보냈습니다.";
 	public static final String CONFIRM_CANCEL_SCHEDULE = "%s님이 {0} 코칭 일정 취소 요청을 확인했습니다.";
 	public static final String UPDATE_SCHEDULE = "%s님이 {0}에서 {1}로 코칭 일정을 변경했습니다.";
+	public static final String UPDATE_FEEDBACK = "%s님이 {0} 코칭에 대한 피드백을 작성했습니다.";
 }
