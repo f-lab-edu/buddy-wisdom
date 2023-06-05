@@ -10,6 +10,8 @@ public enum ErrorMessage {
 	// MEMBER
 	NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "등록된 회원이 존재하지 않습니다."),
 	INVALID_CREDENTIALS_EXCEPTION(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다."),
+	DUPLICATED_MEMBER_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 등록된 이메일입니다."),
+	FAILED_CREATE_MEMBER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "회원가입에 실패하였습니다."),
 
 	// MENTEE
 	NOT_FOUND_MENTEE_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 멘티 스케줄이 존재하지 않습니다."),

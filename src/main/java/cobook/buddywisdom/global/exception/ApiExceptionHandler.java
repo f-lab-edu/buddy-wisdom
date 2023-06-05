@@ -3,6 +3,8 @@ package cobook.buddywisdom.global.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import cobook.buddywisdom.member.exception.DuplicatedMemberEmailException;
+import cobook.buddywisdom.member.exception.FailedCreateMemberException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -102,4 +104,21 @@ public class ApiExceptionHandler {
 		log.error("NotFoundFeedbackException : ", exception);
 		return ErrorResponse.toResponseEntity(ErrorMessage.NOT_FOUND_FEEDBACK);
 	}
+
+	@ExceptionHandler(InvalidCredentialsException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException exception) {
+		log.error("InvalidCredentialsException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.INVALID_CREDENTIALS_EXCEPTION);
+	}
+	@ExceptionHandler(DuplicatedMemberEmailException.class)
+	public ResponseEntity<ErrorResponse> handleDuplicatedMemberEmailException(DuplicatedMemberEmailException exception) {
+		log.error("DuplicatedMemberEmailException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.DUPLICATED_MEMBER_EMAIL_EXCEPTION);
+	}
+	@ExceptionHandler(FailedCreateMemberException.class)
+	public ResponseEntity<ErrorResponse> handleFailedCreateMemberException(FailedCreateMemberException exception) {
+		log.error("FailedCreateMemberException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.FAILED_CREATE_MEMBER_EXCEPTION);
+	}
+
 }
