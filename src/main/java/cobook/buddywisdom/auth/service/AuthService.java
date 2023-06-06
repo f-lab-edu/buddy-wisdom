@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +45,6 @@ public class AuthService {
                 = new UsernamePasswordAuthenticationToken(userDetails, password);
 
         Authentication authenticate = managerBuilder.getObject().authenticate(token);
-        // 스레드가 실행되는 동안 인증 상태를 유지하도록 저장
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         return tokenProvider.createToken(authenticate);
     }
