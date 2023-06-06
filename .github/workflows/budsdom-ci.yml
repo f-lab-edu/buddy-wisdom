@@ -20,6 +20,12 @@ jobs:
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Set up environment variables
+        run: |
+          echo "jwt.secret=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "jwt.accessToken-validity-in-seconds=${{ secrets.JWT_ACCESS_TOKEN_VALIDITY }}" >> $GITHUB_ENV
+          echo "jwt.refreshToken-validity-in-seconds=${{ secrets.JWT_REFRESH_TOKEN_VALIDITY }}" >> $GITHUB_ENV
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
