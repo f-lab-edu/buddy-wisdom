@@ -130,8 +130,7 @@ public class TokenProvider implements InitializingBean {
         log.debug("claims id = {}", id);
         log.debug("claims username = {}", claims.getSubject());
 
-        boolean activeYn = true;
-        AuthMember user = memberMapper.findActiveMemberByEmail(claims.getSubject(), activeYn)
+        AuthMember user = memberMapper.findByEmail(claims.getSubject())
                 .orElseThrow(() -> new NotFoundMemberException(ErrorMessage.NOT_FOUND_MEMBER));
 
         CustomUserDetails principal = CustomUserDetails.builder()

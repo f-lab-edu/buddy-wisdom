@@ -3,6 +3,7 @@ package cobook.buddywisdom.global.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import cobook.buddywisdom.member.exception.AdminDeletionNotAllowedException;
 import cobook.buddywisdom.member.exception.DuplicatedMemberEmailException;
 import cobook.buddywisdom.member.exception.FailedCreateMemberException;
 import org.springframework.http.ResponseEntity;
@@ -119,6 +120,12 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleFailedCreateMemberException(FailedCreateMemberException exception) {
 		log.error("FailedCreateMemberException : ", exception);
 		return ErrorResponse.toResponseEntity(ErrorMessage.FAILED_CREATE_MEMBER_EXCEPTION);
+	}
+
+	@ExceptionHandler(AdminDeletionNotAllowedException.class)
+	public ResponseEntity<ErrorResponse> handleAdminDeletionNotAllowedException(AdminDeletionNotAllowedException exception) {
+		log.error("AdminDeletionNotAllowedException : ", exception);
+		return ErrorResponse.toResponseEntity(ErrorMessage.ADMIN_DELETION_NOT_ALLOWED_EXCEPTION);
 	}
 
 }

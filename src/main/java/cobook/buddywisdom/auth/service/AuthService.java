@@ -31,9 +31,8 @@ public class AuthService {
     @Transactional(readOnly = true)
     public TokenDto login(final String email, final String password) {
 
-        // 활동중인 회원이 존재하는지 체크
-        boolean activeYn = true;
-        AuthMember userCheck = memberMapper.findActiveMemberByEmail(email, activeYn)
+        // 회원이 존재하는지 체크
+        AuthMember userCheck = memberMapper.findByEmail(email)
                 .orElseThrow(() -> new InvalidCredentialsException(ErrorMessage.INVALID_CREDENTIALS_EXCEPTION));
 
         // 암호화된 비밀번호 매칭

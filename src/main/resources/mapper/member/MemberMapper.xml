@@ -32,17 +32,6 @@
         );
     </insert>
 
-    <select id="findActiveMemberByEmail" parameterType="String" resultType="AuthMember">
-        SELECT
-            m.id
-             , m.email
-             , m.password
-             , m.role
-        FROM member m
-        WHERE m.email = #{email}
-          AND m.active_yn = #{activeYn}
-    </select>
-
     <select id="findByEmail" parameterType="String" resultType="AuthMember">
         SELECT
             m.id
@@ -68,5 +57,11 @@
         FROM member
         WHERE id = #{id}
     </select>
+
+    <update id="deleteMember" parameterType="map">
+        UPDATE member
+           SET active_yn = #{activeYn}
+         WHERE id = #{memberId}
+    </update>
 
 </mapper>

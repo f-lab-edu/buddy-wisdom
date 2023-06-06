@@ -21,8 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        boolean activeYn = true;
-        return CustomUserDetails.of(memberMapper.findActiveMemberByEmail(username, activeYn)
+        return CustomUserDetails.of(memberMapper.findByEmail(username)
                 .orElseThrow(() -> new NotFoundMemberException(ErrorMessage.NOT_FOUND_MEMBER)));
     }
 }

@@ -1,11 +1,14 @@
 package cobook.buddywisdom.member.controller;
 
+import cobook.buddywisdom.global.security.CustomUserDetails;
 import cobook.buddywisdom.member.dto.CreateMemberDto;
+import cobook.buddywisdom.member.exception.AdminDeletionNotAllowedException;
 import cobook.buddywisdom.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,5 +24,11 @@ public class MemberController {
     @PostMapping("/public/members")
     public ResponseEntity<Integer> createMember(@RequestBody CreateMemberDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(requestDto));
+    }
+
+    @DeleteMapping("/members")
+    public ResponseEntity<Integer> deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails) throws AdminDeletionNotAllowedException {
+        memberService.deleteMember(userDetails.getId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

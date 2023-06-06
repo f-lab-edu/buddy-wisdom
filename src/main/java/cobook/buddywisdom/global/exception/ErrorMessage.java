@@ -12,6 +12,7 @@ public enum ErrorMessage {
 	INVALID_CREDENTIALS_EXCEPTION(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다."),
 	DUPLICATED_MEMBER_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 등록된 이메일입니다."),
 	FAILED_CREATE_MEMBER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "회원가입에 실패하였습니다."),
+	ADMIN_DELETION_NOT_ALLOWED_EXCEPTION(HttpStatus.FORBIDDEN, "관리자는 탈퇴가 불가능합니다."),
 
 	// MENTEE
 	NOT_FOUND_MENTEE_SCHEDULE(HttpStatus.NOT_FOUND, "등록된 멘티 스케줄이 존재하지 않습니다."),
@@ -33,7 +34,7 @@ public enum ErrorMessage {
 	ALREADY_CHECKED_FEED(HttpStatus.BAD_REQUEST, "이미 확인이 완료되었습니다."),
 
 	// FEEDBACK
-	NOT_FOUND_FEEDBACK(HttpStatus.NOT_FOUND, "등록된 피드백이 존재하지 않습니다.")
+	NOT_FOUND_FEEDBACK(HttpStatus.NOT_FOUND, "등록된 피드백이 존재하지 않습니다."),
 
 	;
 

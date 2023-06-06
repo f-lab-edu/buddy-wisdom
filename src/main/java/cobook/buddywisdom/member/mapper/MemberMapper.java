@@ -12,7 +12,9 @@ import java.util.Optional;
 @Mapper
 public interface MemberMapper {
     Optional<AuthMember> findByEmail(final String username);
-    Optional<AuthMember> findActiveMemberByEmail(final String username, final boolean activeYn);
     Optional<Member> findById(long id);
+
+
     Integer createMember(CreateMemberDto dto);
+    Integer deleteMember(long memberId, boolean activeYn);
 }
