@@ -25,8 +25,8 @@ jobs:
         with:
           arguments: build
           
-      - name: Submodule checkout
-        uses: actions/checkout@v1
+      - name: Submodule access
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
