@@ -1,8 +1,11 @@
 package cobook.buddywisdom.feedback.controller;
 
+import static cobook.buddywisdom.global.vo.MemberApiType.*;
+
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cobook.buddywisdom.feedback.dto.FeedbackResponseDto;
 import cobook.buddywisdom.feedback.dto.UpdateFeedbackRequestDto;
 import cobook.buddywisdom.feedback.service.FeedbackService;
+import cobook.buddywisdom.global.security.CustomUserDetails;
 import cobook.buddywisdom.global.vo.MemberApiType;
 import jakarta.validation.Valid;
 
@@ -33,12 +37,13 @@ public class FeedbackController {
 	}
 
 	@PatchMapping("/{memberApiType}/feedback")
-	public ResponseEntity<Void> updateFeedback(@PathVariable final MemberApiType memberApiType,
+	public ResponseEntity<Void> updateFeedback(@AuthenticationPrincipal CustomUserDetails member,
+												@PathVariable final MemberApiType memberApiType,
 												@RequestBody @Valid final UpdateFeedbackRequestDto request) {
-		if (MemberApiType.COACHES.equals(memberApiType)) {
-			feedbackService.updateFeedbackByCoach(request.menteeScheduleId(), request.feedback());
-		} else if (MemberApiType.MENTEES.equals(memberApiType)) {
-			feedbackService.updateFeedbackByMentee(request.menteeScheduleId(), request.feedback());
+		if (COACHES.equals(memberApiType)) {
+			feedbackService.updateFeedbackByCoach(member.getId(), request.menteeScheduleId(), request.feedback());
+		} else if (MENTEES.equals(memberApiType)) {
+			feedbackService.updateFeedbackByMentee(member.getId(), request.menteeScheduleId(), request.feedback());
 		}
 
 		return ResponseEntity.noContent().build();
