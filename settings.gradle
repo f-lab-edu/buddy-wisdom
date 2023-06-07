@@ -1,3 +1,1 @@
 rootProject.name = 'buddy-wisdom'
-include 'buddy-wisdom-private'
-project(':buddy-wisdom-private').projectDir = new File('buddy-wisdom-private')

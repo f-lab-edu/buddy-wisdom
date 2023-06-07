@@ -78,13 +78,13 @@ repositories {
 
 // submodule
 // 메인 프로젝트와 경로를 맞춰줘야 런타임 시에 정상적으로 주입이 된다
-sourceSets {
-    main {
-        resources {
-            srcDirs = ['src/main/resources', 'buddy-wisdom-private/src/main/resources']
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        resources {
+//            srcDirs = ['src/main/resources', 'buddy-wisdom-private/src/main/resources']
+//        }
+//    }
+//}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -113,9 +113,6 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
-
-    // submodule
-    implementation project(':buddy-wisdom-private')
     // Jackson yaml
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
@@ -128,14 +125,14 @@ dependencies {
 }
 
 // gradle 에서 submodule 의 yml 을 읽어오기 위한 설정
-//tasks.register('readYamlFile') {
-//    doLast {
-//        File file = new File("${project.rootDir}/buddy-wisdom-private/src/main/resources/application.yml")
-//        ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
-//        def config = mapper.readValue(file, Map.class)
-//        println config
-//    }
-//}
+tasks.register('readYamlFile') {
+    doLast {
+        File file = new File("${project.rootDir}/resources/application.yml")
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
+        def config = mapper.readValue(file, Map.class)
+        println config
+    }
+}
 
 tasks.register('copyPrivate') {
     copy {
