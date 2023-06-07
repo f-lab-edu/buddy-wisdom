@@ -113,6 +113,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
+
+    // submodule
+    implementation project(':buddy-wisdom-private')
     // Jackson yaml
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
@@ -136,9 +139,9 @@ dependencies {
 
 tasks.register('copyPrivate') {
     copy {
-        from "${project.rootDir}/buddy-wisdom-private/src/main/resources"
-        include "*.yml"
-        into './src/main/resources'
+        from 'buddy-wisdom-private/src/main/resources'
+        include '*.yml'
+        into 'src/main/resources'
     }
 }
 
