@@ -124,10 +124,10 @@ dependencies {
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }
 
-// gradle 에서 submodule 의 yml 을 읽어오기 위한 설정
+// gradle 에서 yml 을 읽어오기 위한 설정
 tasks.register('readYamlFile') {
     doLast {
-        File file = new File("${project.rootDir}/resources/application.yml")
+        File file = new File("${project.rootDir}/src/main/resources/application.yml")
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
         def config = mapper.readValue(file, Map.class)
         println config
