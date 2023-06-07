@@ -134,13 +134,13 @@ dependencies {
 //    }
 //}
 
-//tasks.register('copyPrivate') {
-//    copy {
-//        from './buddy-wisdom-private/src/main/resources'
-//        include "*.yml"
-//        into './src/main/resources'
-//    }
-//}
+tasks.register('copyPrivate') {
+    copy {
+        from "${project.rootDir}/buddy-wisdom-private/src/main/resources"
+        include "*.yml"
+        into './src/main/resources'
+    }
+}
 
 tasks.named('test') {
     useJUnitPlatform()
