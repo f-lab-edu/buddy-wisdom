@@ -127,20 +127,20 @@ dependencies {
 // gradle 에서 submodule 의 yml 을 읽어오기 위한 설정
 tasks.register('readYamlFile') {
     doLast {
-        File file = new File('buddy-wisdom-private/src/main/resources/application.yml')
+        File file = new File("${project.rootDir}/buddy-wisdom-private/src/main/resources/application.yml")
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
         def config = mapper.readValue(file, Map.class)
         println config
     }
 }
 
-tasks.register('copyPrivate') {
-    copy {
-        from './buddy-wisdom-private/src/main/resources'
-        include "*.yml"
-        into './src/main/resources'
-    }
-}
+//tasks.register('copyPrivate') {
+//    copy {
+//        from './buddy-wisdom-private/src/main/resources'
+//        include "*.yml"
+//        into './src/main/resources'
+//    }
+//}
 
 tasks.named('test') {
     useJUnitPlatform()
