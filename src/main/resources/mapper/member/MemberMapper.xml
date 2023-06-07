@@ -5,7 +5,34 @@
 
 <mapper namespace="cobook.buddywisdom.member.mapper.MemberMapper">
 
-    <select id="findByEmailAndPassword" parameterType="String" resultType="AuthMember">
+    <insert id="createMember" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="BEFORE">
+            SELECT MAX(id)+1 AS ID FROM member
+        </selectKey>
+        INSERT INTO member
+        (id
+        , name
+        , nickname
+        , email
+        , password
+        , phone_number
+        , role
+        , active_yn
+        , created_at
+        )
+        VALUES (#{id}
+        , #{name}
+        , #{nickname}
+        , #{email}
+        , #{password}
+        , #{phoneNumber}
+        , #{role}
+        , #{activeYn}
+        , #{createdAt}
+        );
+    </insert>
+
+    <select id="findByEmail" parameterType="String" resultType="AuthMember">
         SELECT
             m.id
              , m.email
@@ -13,18 +40,6 @@
              , m.role
         FROM member m
         WHERE m.email = #{email}
-          AND m.password = #{password}
-          AND m.active_yn = 1
-    </select>
-
-    <select id="findByEmail" parameterType="String" resultType="AuthMember">
-        SELECT
-            m.id
-             , m.email
-             , m.role
-        FROM member m
-        WHERE m.email = #{email}
-          AND m.active_yn = 1
     </select>
 
     <select id="findById" parameterType="long" resultType="Member">
@@ -42,5 +57,11 @@
         FROM member
         WHERE id = #{id}
     </select>
+
+    <update id="deleteMember" parameterType="map">
+        UPDATE member
+           SET active_yn = #{activeYn}
+         WHERE id = #{memberId}
+    </update>
 
 </mapper>

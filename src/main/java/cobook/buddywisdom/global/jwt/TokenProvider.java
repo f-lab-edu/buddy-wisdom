@@ -65,7 +65,7 @@ public class TokenProvider implements InitializingBean {
 
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
-        // TODO : claim 에   id 를 추가한 정보를 이용. (email 정보를 숨기기 위해)
+        // 회원 조회 시, id 로 가져오기 위해 넣어준다.
         String accessToken = Jwts.builder()
                 .setSubject(principal.getUsername())
                 .claim("id", principal.getId())

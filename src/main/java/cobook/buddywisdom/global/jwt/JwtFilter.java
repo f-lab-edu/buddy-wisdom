@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "X-Auth-Token";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response
@@ -44,12 +44,6 @@ public class JwtFilter extends GenericFilterBean {
 
     // request header 에서 token 정보를 꺼내온다
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            // Bearer Token 에서 "Token"을 잘라낸다
-            return bearerToken.substring(7);
-        }
-        return null;
+        return request.getHeader(AUTHORIZATION_HEADER);
     }
 }
