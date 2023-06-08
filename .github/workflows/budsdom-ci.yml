@@ -37,7 +37,14 @@ jobs:
           jwt.accessToken-validity-in-seconds: ${{ secrets.JWT_ACCESS_TOKEN_VALIDITY }}
           jwt.refreshToken-validity-in-seconds: ${{ secrets.JWT_REFRESH_TOKEN_VALIDITY }}
 
-      - name: Build with Gradle₩$
+      - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
+
+      - name: Docker build
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build --platform linux/amd64 --build-arg DEPENDENCY=build/dependency -t ${{ secrets.DOCKER_HUB_REPO }} .
+          docker tag ${{ secrets.DOCKER_HUB_REPO }} ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7}
+          docker push ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7}
