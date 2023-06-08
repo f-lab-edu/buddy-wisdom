@@ -37,7 +37,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          envs: GITHUB_SHA
           script: |
               docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
               docker pull ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7} 
