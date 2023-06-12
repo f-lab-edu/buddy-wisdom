@@ -16,5 +16,5 @@ public interface MemberMapper {
 
 
     Integer createMember(CreateMemberDto dto);
-    Integer deleteMember(long memberId, boolean activeYn);
+    Integer deleteMember(long memberId);
 }

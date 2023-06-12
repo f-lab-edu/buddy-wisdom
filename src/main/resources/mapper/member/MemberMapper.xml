@@ -60,7 +60,7 @@
 
     <update id="deleteMember" parameterType="map">
         UPDATE member
-           SET active_yn = #{activeYn}
+           SET active_yn = 0
          WHERE id = #{memberId}
     </update>
 

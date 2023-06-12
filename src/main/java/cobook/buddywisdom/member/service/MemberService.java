@@ -38,13 +38,13 @@ public class MemberService {
 		});
 
 		// 가입 수행
-		Integer success = memberMapper.createMember(CreateMemberDto.of(dto, passwordEncoder));
+		Integer insertCount = memberMapper.createMember(CreateMemberDto.of(dto, passwordEncoder));
 
 		// 가입 실패 시 에러 수행
-		if(success < 1) {
+		if(insertCount < 1) {
 			throw new FailedCreateMemberException(ErrorMessage.FAILED_CREATE_MEMBER_EXCEPTION);
 		}
-		return success;
+		return insertCount;
 	}
 
 	public void deleteMember(final long memberId) throws AdminDeletionNotAllowedException {
@@ -56,7 +56,7 @@ public class MemberService {
 		if(member.getRole().equals(RoleType.ADMIN)) {
 			throw new AdminDeletionNotAllowedException(ErrorMessage.ADMIN_DELETION_NOT_ALLOWED_EXCEPTION);
 		} else {
-			memberMapper.deleteMember(memberId, false);
+			memberMapper.deleteMember(memberId);
 		}
 
 	}
