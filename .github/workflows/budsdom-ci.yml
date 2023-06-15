@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  YAML_PATH: ./buddy-wisdom-private/src/main/resources/application.yml
-
 jobs:
   build:
 
@@ -27,15 +24,6 @@ jobs:
 
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
-
-      - name: Set yml file
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.YAML_PATH }}
-        env:
-          jwt.secret: ${{ secrets.JWT_SECRET }}
-          jwt.accessToken-validity-in-seconds: ${{ secrets.JWT_ACCESS_TOKEN_VALIDITY }}
-          jwt.refreshToken-validity-in-seconds: ${{ secrets.JWT_REFRESH_TOKEN_VALIDITY }}
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
