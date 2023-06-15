@@ -1,0 +1,13 @@
+version: '3'
+services:
+  blue:
+    container_name: blue
+    image: ${USERNAME}/${REPOSITORY}:${TAG}
+    ports:
+      - "8080:8080"
+
+  green:
+    container_name: green
+    image: ${USERNAME}/${REPOSITORY}:${TAG}
+    ports:
+      - "8081:8080"
