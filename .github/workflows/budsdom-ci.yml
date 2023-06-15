@@ -36,4 +36,3 @@ jobs:
           docker build --platform linux/amd64 --build-arg DEPENDENCY=build/dependency -t ${{ secrets.DOCKER_HUB_REPO }} .
           docker tag ${{ secrets.DOCKER_HUB_REPO }} ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7}
           docker push ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7}
-          echo "DOCKER_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV

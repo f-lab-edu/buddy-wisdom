@@ -38,7 +38,8 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            echo TAG=${{ env.DOCKER_TAG }} >> .env
+            DOCKER_TAG=$(docker images ${{ secrets.DOCKER_USERNAME}}/${{ secrets.DOCKER_HUB_REPO }} --format "{{.Tag}} {{.CreatedSince}}" | sort -k2 -r | head -n 1 | awk '{print $1}')
+            echo TAG=${DOCKER_TAG} >> .env
             echo USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
             echo REPOSITORY=${{ secrets.DOCKER_HUB_REPO }} >> .env
 
